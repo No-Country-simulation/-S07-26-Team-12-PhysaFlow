@@ -1,0 +1,7 @@
+export default function Navbar() {
+    return(
+        <div className="fixed top-0 left-0 w-full z-50 bg-pink-300">
+            <h3>Navbar</h3>
+        </div>
+    )
+}
