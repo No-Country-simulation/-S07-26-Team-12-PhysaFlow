@@ -54,7 +54,7 @@ La pieza más importante: visualización interactiva de las tres capas mostrando
 - **Tailwind CSS** para todos los estilos
 - **React Router v7** para navegación (`react-router`)
 - **Framer Motion** para animaciones de la visualización de capas
-- **Recharts** o **D3.js** para gráficos de comparación de escenarios
+- **Recharts** para gráficos de comparación de escenarios
 - **jspdf** para generación de PDF descargable
 - **Zustand** para estado global del flujo de la calculadora
 - **Vercel** para deploy
