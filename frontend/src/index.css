@@ -1,7 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+
+
 @import "tailwindcss";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+
+
+@theme{
+
+    --font-title: "Fraunces", serif;
+    --font-body: "IBM Plex Sans", sans-serif;
+    --font-data: "IBM Plex Mono", monospace;
+    
+    --color-background: #93a798;
+    --color-gold-dark: #C9A227;
+    --color-green-dark: #2E6B4C;
+    --color-green-light: #6FA98A;
+    --color-gold-light: #DBB84D;
+    --color-gold-lightest: #E9D08A;
+
+
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    color: var(--color-green-dark);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-title);
+    font-weight: 700;
+  }
+}
+
+@layer components {
+
+    /*text formatting*/
+
+    .display-hero{
+        font-family: var(--font-title);
+        font-weight: 900;
+        color: var(--color-gold-dark);
+        font-size: 56px;
+    }
+    .display-h1{
+        font-family: var(--font-title);
+        font-weight: 600;
+        font-size: 36px;
+    }
+    .display-h2{
+        font-family: var(--font-title);
+        color: var(--color-gold-dark);
+        font-weight: 600;
+        font-size: 24px;
+    }
+    .body-large{
+        font-family: var(--font-body);
+        font-size: large;
+        color: var(--color-green-light);
+    }
+    .body-regular{
+        font-family: var(--font-body);
+        color: var(--color-gold-light);
+    }
+    .label-eyebrow{
+        font-family: var(--font-data);
+        color: var(--color-gold-lightest);
+        font-size: 14px;
+    }
+    .data-big{
+        font-family: var(--font-data);
+        font-size: 44px;
+        font-weight: 600;
+    }
+    .data-medium{
+        font-family: var(--font-data);
+        font-weight: 500;
+        font-size: 18px;
+        color:var(--color-green-light)
+    }
+    .data-small{
+        font-size: 12px;
+        font-family: var(--font-data);
+        color: var(--color-gold-light);
+    }
+
 }
