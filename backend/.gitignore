@@ -1,0 +1,22 @@
+# Environment
+.env
+.env.local
+.env.development
+.env.production
+
+# Node
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+
+# Build
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
