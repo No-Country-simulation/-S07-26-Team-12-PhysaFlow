@@ -6,7 +6,7 @@ const SharedResult = sequelize.define(
     {
         id:{
             type: DataTypes.UUID,
-            defaultValue: 0, // defaultValue establecido en "0" para que inicie en el orden correspondiente en la tabla
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             allowNull: false,
         },
@@ -18,8 +18,14 @@ const SharedResult = sequelize.define(
                 model: "calculations",
                 key: "id",
             },
-            onUpdate: CASCADE,
-            onDelete: CASCADE,
+            onUpdate: "CASCADE",
+            onDelete: "CASCADE",
+        },
+
+        view_count: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false,
         },
 
         share_token: {
