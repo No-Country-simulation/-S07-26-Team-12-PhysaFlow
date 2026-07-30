@@ -4,8 +4,8 @@ import Home from "../pages/Home";
 
 export default function Layout() {
     return(
-        <Routes>
-            <Route path="/" element={<Home/>} />
+        <Routes >
+            <Route  path="/" element={<Home/>} />
         </Routes>
     )
 }

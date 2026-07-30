@@ -1,9 +1,35 @@
+import { screenSize } from "../components/hooks/screenSize";
+import PageConainer from "../components/PageContainer";
+import Spacing from "../components/spacing/Spacing";
 
 export default function Home() {
+  const{isMobile, isTablet}=screenSize()
+
   return (
-    <div className="min-h-screen bg-gray-50">  
-        <h1 className="bg-red-300 p-4 rounded">Physaflow</h1>
-        <p className="mt-2 text-gray-700">Bienvenido a Physaflow</p>      
-    </div>
+        <PageConainer>
+          <div className={`flex ${(isMobile || isTablet) ? "flex-col" :"flex-row"} h-full `}>
+            <div className={`${(!isMobile && !isTablet) ? "w-1/2":"w-full"} flex flex-col justify-center content-center`}>
+            <h1 className="display-hero">
+              Calculá la capacidad estancada de tu datacenter
+            </h1>
+            <Spacing size="xs"/>
+            <p >Identificá cuánto MW perdés por sobreaprovisionamiento, en minutos</p>
+            <Spacing size="lg"/>
+            <div className={`${(isMobile || isTablet) ? "flex justify-center" :""}`}>
+              <button className="w-1/2 bg-green-dark rounded p-3 text-white">Calculá ahora</button>
+            </div>
+            
+            </div>
+            {(isMobile || isTablet) && <Spacing/>}
+            <div className={`${(!isMobile && !isTablet) ? "w-1/2":"w-full"} flex items-center justify-center `}>
+                <img 
+                src="https://img.magnific.com/foto-gratis/centro-datos-moderno-que-brinda-servicios-nube-lo-que-permite-empresas-acceder-recursos-informaticos-almacenamiento-demanda-traves-internet-animacion-renderizado-3d-infraestructura-sala-servidores_482257-65963.jpg?semt=ais_test_b&w=740&q=80" 
+                alt="datacenter"
+                className="w-full h-auto object-contain"
+                />
+            </div>
+          </div>
+
+        </PageConainer>
   )
 }
