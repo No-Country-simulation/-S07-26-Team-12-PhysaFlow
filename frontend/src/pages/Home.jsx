@@ -1,17 +1,35 @@
+import { screenSize } from "../components/hooks/screenSize";
 import PageConainer from "../components/PageContainer";
+import Spacing from "../components/spacing/Spacing";
 
 export default function Home() {
+  const{isMobile, isTablet}=screenSize()
+
   return (
         <PageConainer>
-        <p className="display-hero">Bienvenido a Physaflow</p> 
-        <h1 className="display-h1">Capacidad estancada</h1>    
-        <h2 className="display-h2">El mapa de fuga entre capas</h2>
-        <p className="body-large">Tres datos. Un resultado en segundos.</p>
-        <p className="body-regular">Estimado direccional según valor de mercado por MW.</p>
-        <p className="label-eyebrow">MOMENTO 01 · INPUT </p>
-        <p className="data-big">38.4 MW</p>
-        <p className="data-medium">−9.6 MW en overhead</p>
-        <p className="data-small">42 MW instalados</p>
+          <div className={`flex ${(isMobile || isTablet) ? "flex-col" :"flex-row"} h-full `}>
+            <div className={`${(!isMobile && !isTablet) ? "w-1/2":"w-full"} flex flex-col justify-center content-center`}>
+            <h1 className="display-hero">
+              Calculá la capacidad estancada de tu datacenter
+            </h1>
+            <Spacing size="xs"/>
+            <p >Identificá cuánto MW perdés por sobreaprovisionamiento, en minutos</p>
+            <Spacing size="lg"/>
+            <div className={`${(isMobile || isTablet) ? "flex justify-center" :""}`}>
+              <button className="w-1/2 bg-green-dark rounded p-3 text-white">Calculá ahora</button>
+            </div>
+            
+            </div>
+            {(isMobile || isTablet) && <Spacing/>}
+            <div className={`${(!isMobile && !isTablet) ? "w-1/2":"w-full"} flex items-center justify-center `}>
+                <img 
+                src="https://img.magnific.com/foto-gratis/centro-datos-moderno-que-brinda-servicios-nube-lo-que-permite-empresas-acceder-recursos-informaticos-almacenamiento-demanda-traves-internet-animacion-renderizado-3d-infraestructura-sala-servidores_482257-65963.jpg?semt=ais_test_b&w=740&q=80" 
+                alt="datacenter"
+                className="w-full h-auto object-contain"
+                />
+            </div>
+          </div>
+
         </PageConainer>
   )
 }
