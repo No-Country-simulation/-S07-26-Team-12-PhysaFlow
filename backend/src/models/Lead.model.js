@@ -9,6 +9,11 @@ const Lead = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      // TODO:en futuras versiones podra actualizarse
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -17,12 +22,22 @@ const Lead = sequelize.define(
         isEmail: true,
       },
     },
-    // TODO:agrgar calculation_id (UUID, FK) cuando exista Calculation
-    // TODO:agregar sharedResult_id (UUID, FK) cuando exista SharedResult
+
+    source: {
+      type: DataTypes.ENUM("direct", "shared"),
+      allowNull: false,
+      defaultValue: "direct",
+    },
+
+    status: {
+      type: DataTypes.ENUM("new", "contacted", "converted"), // sujeto a cambios
+      allowNull: false,
+      defaultValue: "new",
+    },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 export default Lead;

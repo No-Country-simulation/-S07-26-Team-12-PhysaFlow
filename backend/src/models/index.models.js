@@ -1,10 +1,8 @@
 import Lead from "./Lead.model.js";
 
-// TODO: importar aca Calculation, SharedResult cuando existan
+// TODO: importar SharedResult cuando exista
 
-// TODO: definir asociaciones aca
-// Lead.hasMany(Calculation);
-// Calculation.belongsTo(Lead);
+// TODO: definir asociaciones
 
 const models = {
   Lead,
