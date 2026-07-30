@@ -17,10 +17,12 @@ const Lead = sequelize.define(
         isEmail: true,
       },
     },
+    // TODO:agrgar calculation_id (UUID, FK) cuando exista Calculation
+    // TODO:agregar sharedResult_id (UUID, FK) cuando exista SharedResult
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default Lead;
