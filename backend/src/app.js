@@ -2,9 +2,12 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./config/swagger.js";
 
 import indexRouter from "./routes/index.routes.js";
-import swaggerSpec from "./config/swagger.js";
+import "./models/index.models.js";
+
+import { sequelize, connectDB } from "./config/database.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +33,12 @@ app.use("/health", () => {
 });
 
 // Lenvantar el servidor node.js y de base de datos
-app.listen(PORT, () => {
-  console.log("✅ El servidor esta corriendo correctamente");
-});
+const startServer = async () => {
+  await connectDB(); // TODO: reemplazar sync() con migraciones cuando los modelos esten estables
+  await sequelize.sync({ alter: true });
+  app.listen(PORT, () => {
+    console.log(`✅ Servidor corriendo en puerto ${PORT}`);
+  });
+};
+
+startServer();
