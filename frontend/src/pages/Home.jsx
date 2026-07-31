@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { screenSize } from "../components/hooks/screenSize";
 import PageConainer from "../components/PageContainer";
 import Spacing from "../components/spacing/Spacing";
@@ -16,7 +17,12 @@ export default function Home() {
             <p >Identificá cuánto MW perdés por sobreaprovisionamiento, en minutos</p>
             <Spacing size="lg"/>
             <div className={`${(isMobile || isTablet) ? "flex justify-center" :""}`}>
-              <button className="w-1/2 bg-green-dark rounded p-3 text-white">Calculá ahora</button>
+              <Link
+                to="/form"
+                className="w-1/2 bg-green-dark rounded p-3 text-white text-center block"
+              >
+                Calculá ahora
+              </Link>
             </div>
             
             </div>
