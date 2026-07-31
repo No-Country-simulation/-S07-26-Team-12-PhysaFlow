@@ -1,12 +1,14 @@
-
 import Fields from "./Fields";
 import ErrorMessage from "./ErrorMessage";
 import CalculateButton from "./CalculateButton";
+import Spacing from "../../../../components/spacing/Spacing";
  
 export default function InputForm() {
   return (
     <form className="flex flex-col gap-3 w-full max-w-md">
       <h2 className="display-h2 px-3 py-2">Ingresá los datos de tu datacenter</h2>
+
+      <Spacing size="xs" />
  
       <Fields
         label="Superficie del datacenter (m²)"
@@ -32,6 +34,8 @@ export default function InputForm() {
         label="PUE actual"
         name="pueActual"
       />
+
+      <Spacing size="lg" />
  
       <CalculateButton />
     </form>
