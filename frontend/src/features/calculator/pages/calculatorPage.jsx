@@ -5,8 +5,8 @@ export default function CalculatorPage() {
     <div className="w-full min-h-screen flex flex-col">
       {/* Header — logo + volver */}
       <header className="w-full flex items-center px-4 py-3">
-        <span className="text-sm">Header — logo</span>
-        <span className="text-sm ml-4">&larr; Volver</span>
+        <span className="label-eyebrow">Header — logo</span>
+        <span className="label-eyebrow ml-4">&larr; Volver</span>
       </header>
  
       {/* Contenido principal: formulario + panel de ayuda */}
@@ -18,7 +18,7 @@ export default function CalculatorPage() {
  
         {/* Columna derecha: panel de ayuda / ejemplo de datos */}
         <aside className="w-full md:w-1/2 flex items-center justify-center border border-dashed min-h-[300px]">
-          <p className="text-sm text-center">
+          <p className="body-large text-center">
             Panel de ayuda / ejemplo de datos
             <br />
             — definido en Sprint 3 —

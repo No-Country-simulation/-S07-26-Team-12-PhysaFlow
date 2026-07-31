@@ -6,8 +6,8 @@ export default function ErrorMessage({
  
   return (
     <div className="w-full px-3 py-2 flex items-center gap-2">
-      <span aria-hidden="true">⚠</span>
-      <p className="text-sm">{message}</p>
+      <span aria-hidden="true" className="data-small">⚠</span>
+      <p className="data-small">{message}</p>
     </div>
   );
 }
