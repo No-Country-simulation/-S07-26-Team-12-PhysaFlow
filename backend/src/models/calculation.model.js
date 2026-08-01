@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../models/database.js";
+import sequelize from "../config/database.js";
 
 const Calculation = sequelize.define(
     "Calculation",
@@ -73,7 +73,7 @@ const Calculation = sequelize.define(
         },
 },
 {
-    tableName: "leads",
+    tableName: "calculations",
     timestamps: true,
 }
 );
