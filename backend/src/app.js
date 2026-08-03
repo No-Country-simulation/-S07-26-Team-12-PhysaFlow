@@ -4,10 +4,8 @@ import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
 
-import indexRouter from "./routes/index.routes.js";
-import "./models/index.models.js";
-
 import { sequelize, connectDB } from "./config/database.js";
+import indexRouter from "./routes/index.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
