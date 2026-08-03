@@ -34,7 +34,7 @@ const Calculation = sequelize.define(
         },
 
         cooling_type: {
-            type: DataTypes.ENUM('air', 'liquid', 'immersion'),
+            type: DataTypes.ENUM('air', 'liquid', 'immersion', 'hybrid'),
             allowNull: false,
         },
 
@@ -64,7 +64,7 @@ const Calculation = sequelize.define(
 
         formula_version: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
 
         calculator_type: {
