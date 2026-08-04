@@ -1,0 +1,35 @@
+.capacity-flow{
+    width:100%;
+    max-width:500px;
+    height:auto;
+    display:block;
+    margin:auto;
+    overflow:visible;
+}
+
+
+
+.layer-bar{
+    transition:width .5s ease;
+}
+
+.layer-bar:hover {
+  transform: scale(1.02);
+}
+
+
+
+.layer-label{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:14px;
+    font-weight:600;
+    fill:#6FA98A;
+}
+
+
+.layer-value{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12px;
+    font-weight:400;
+    fill:#6FA98A;
+}
