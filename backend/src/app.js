@@ -4,10 +4,9 @@ import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
 
-import indexRouter from "./routes/index.routes.js";
-import "./models/index.models.js";
-
 import { sequelize, connectDB } from "./config/database.js";
+import "./models/index.models.js";
+import indexRouter from "./routes/index.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +34,9 @@ app.use("/health", () => {
 // Lenvantar el servidor node.js y de base de datos
 const startServer = async () => {
   await connectDB(); // TODO: reemplazar sync() con migraciones cuando los modelos esten estables
+
+  // console.log(sequelize.models);
+
   await sequelize.sync({ alter: true });
   app.listen(PORT, () => {
     console.log(`✅ Servidor corriendo en puerto ${PORT}`);
