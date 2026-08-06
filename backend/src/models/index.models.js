@@ -39,7 +39,7 @@ Calculation.belongsTo(Lead, {
 
 // Calculation (1) ===> SharedResult (N)
 Calculation.hasMany(SharedResult, {
-  foreignKey: "calculation_id",
+  foreignKey: { name: "calculation_id", allowNull: false },
   as: "sharedResults",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
