@@ -13,7 +13,7 @@ const Calculation = sequelize.define(
 
         lead_id: {
             type: DataTypes.UUID,
-            allowNull: false,
+            allowNull: true,
             references:{
                 model: "leads",
                 key: "id",
@@ -65,11 +65,6 @@ const Calculation = sequelize.define(
         formula_version: {
             type: DataTypes.STRING,
             allowNull: true,
-        },
-
-        calculator_type: {
-            type: DataTypes.ENUM('basic', 'advanced'),
-            allowNull: false,
         },
 },
 {

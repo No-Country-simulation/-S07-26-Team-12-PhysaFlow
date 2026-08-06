@@ -36,7 +36,7 @@ const SharedResult = sequelize.define(
 
         expiresAt: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
             defaultValue: () => { //Se agrego un tiempo de vigencia a 7 dias
                 const expirationDate = new Date();
                 expirationDate.setDate(expirationDate.getDate() + 7);
