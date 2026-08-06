@@ -13,7 +13,7 @@ const Calculation = sequelize.define(
 
     lead_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true,
     },
 
     facility_size_mw: {
@@ -28,7 +28,7 @@ const Calculation = sequelize.define(
     },
 
     cooling_type: {
-      type: DataTypes.ENUM("air", "liquid", "immersion"),
+      type: DataTypes.ARRAY(DataTypes.ENUM("air", "liquid", "immersion")),
       allowNull: false,
     },
 
@@ -61,10 +61,6 @@ const Calculation = sequelize.define(
       allowNull: true,
     },
 
-    calculator_type: {
-      type: DataTypes.ENUM("basic", "advanced"),
-      allowNull: false,
-    },
   },
   {
     tableName: "calculations",

@@ -9,7 +9,8 @@ Lead (1)
 
 Calculation (N)
      │
-     └────────── belongsTo ───────► Lead (1)
+     └────────── belongsTo (opcional) ──► Lead (1)
+     lead_id puede ser NULL ─► onDelete: SET NULL
 
 
 Calculation (1)
@@ -25,14 +26,14 @@ SharedResult (N)
 Lead.hasMany(Calculation, {
   foreignKey: "lead_id",
   as: "calculations",
-  onDelete: "CASCADE",
+  onDelete: "SET NULL",
   onUpdate: "CASCADE",
 });
 
 Calculation.belongsTo(Lead, {
   foreignKey: "lead_id",
   as: "lead",
-  onDelete: "CASCADE",
+  onDelete: "SET NULL",
   onUpdate: "CASCADE",
 });
 
