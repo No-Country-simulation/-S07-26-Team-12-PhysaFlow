@@ -12,7 +12,7 @@ export default function Loss({
         <>
 
             <text
-                x={140}
+                x={240}
                 y={y + 30}
                 fontFamily="IBM Plex Mono"
                 fontSize="12"

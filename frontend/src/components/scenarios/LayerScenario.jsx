@@ -8,11 +8,14 @@ export default function Layer({
   maxValue,
   color,
   maxBarWidth,
+ 
 }) {
   const width = (value / maxValue) * maxBarWidth;
 
   return (
-    <>
+    <g
+
+    >
       {/* Label */}
       <text
         x={x}
@@ -41,6 +44,6 @@ export default function Layer({
       >
         {value} MW
       </text>
-    </>
+    </g>
   );
 }

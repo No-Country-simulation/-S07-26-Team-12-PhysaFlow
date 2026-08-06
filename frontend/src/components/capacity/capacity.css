@@ -1,0 +1,71 @@
+
+
+.capacity-flow {
+  width: 100%;
+  height: auto;
+  display: block;
+  
+}
+
+.layer-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  fill:#6FA98A;
+}
+
+.layer-percent {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 15px;
+  font-weight: 600;
+  fill: #fff;
+}
+
+.layer-note {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  fill: #fff;
+}
+
+.loss-value {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  fill: #A8811B;
+}
+
+.loss-reason {
+  font-family: system-ui, sans-serif;
+  font-size: 11.5px;
+  fill: #A8811B;
+}
+
+.rect-border {
+  stroke: #A8811B;
+  stroke-width: 1px;
+}
+
+
+
+.layer-group,
+.loss-group{
+
+    opacity:0;
+
+    transform:translateY(12px);
+
+    animation:fadeSlide .55s forwards;
+
+}
+
+@keyframes fadeSlide{
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}

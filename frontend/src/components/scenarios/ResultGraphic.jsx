@@ -1,5 +1,5 @@
 import Spacing from "../spacing/Spacing";
-import CapacityFlow from "./CapacityFlow";
+
 
 
 
@@ -8,22 +8,22 @@ import CapacityFlow from "./CapacityFlow";
         {
             id:1,
             label:"Facility",
-            value:20,
-            color:"#2D6A4F"
+            value:22,
+            color:"#6FA98A"
         },
 
         {
             id:2,
             label:"IT",
             value:17,
-            color:"#6FA98A"
+            
         },
 
         {
             id:3,
             label:"Workload",
-            value:12,
-            color:"#D4AF37"
+            value:10,
+            color:"#1B4632"
         }
 
     ];
@@ -45,7 +45,7 @@ export default function ResultGraphic() {
         </div>
       </div>
       <Spacing size="md" />
-      <CapacityFlow layers={layers} />
+     
     </div>
   );
 }

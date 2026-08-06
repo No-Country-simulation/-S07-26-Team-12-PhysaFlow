@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<Layout />} />
         <Route path="/form" element={<CalculatorPage />} />
         <Route path='/result' element={<BasicResult/>}/>
-        <Route path="/result-full" element={<FullResult/>} />
+        <Route path="/full-result" element={<FullResult/>} />
       </Routes>
     </>
   )

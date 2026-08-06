@@ -1,4 +1,4 @@
-import Layer from "./Layer";
+import Layer from "./LayerScenario";
 import "./capacity.css";
 import Loss from "./Loss";
 import Spacing from "../spacing/Spacing";
@@ -8,7 +8,7 @@ const GAP = 80;
 const PADDING_TOP = 30;
 const MAX_BAR_WIDTH = 300;
 
-export default function CapacityFlow({ layers }) {
+export default function CapacityGraph({ layers }) {
   if (!layers?.length) return null;
 
   const maxValue = Math.max(...layers.map((layer) => layer.value));
