@@ -5,6 +5,7 @@ import Spacing from "../components/spacing/Spacing";
 import RoundedButton from "../components/reusableComponents/RoundedButton";
 
 
+
 export default function Home() {
   const{isMobile, isTablet}=screenSize()
 
@@ -33,8 +34,6 @@ export default function Home() {
                 />
             </div>
           </div>
-
-        
         </PageConainer>
   )
 }
