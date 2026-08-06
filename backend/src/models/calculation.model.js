@@ -28,8 +28,23 @@ const Calculation = sequelize.define(
     },
 
     cooling_type: {
-      type: DataTypes.ARRAY(DataTypes.ENUM("air", "liquid", "immersion")),
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
+      validate: {
+        // funcion fuera de sequelize para validar que los valores de cooling_type sean validos y que al menos haya un valor
+        isValidCoolingTypes(value) {
+          const allowed = ["air", "liquid", "immersion"];
+          if (!Array.isArray(value) || value.length === 0) {
+            throw new Error("cooling_type debe tener al menos un valor");
+          }
+          const invalidos = value.filter((v) => !allowed.includes(v));
+          if (invalidos.length > 0) {
+            throw new Error(
+              `Valores de cooling_type inválidos: ${invalidos.join(", ")}`,
+            );
+          }
+        },
+      },
     },
 
     stranded_capacity_percent: {
@@ -60,7 +75,6 @@ const Calculation = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-
   },
   {
     tableName: "calculations",
