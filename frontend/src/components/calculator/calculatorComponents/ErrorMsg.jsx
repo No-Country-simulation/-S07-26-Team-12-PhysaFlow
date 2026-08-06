@@ -1,4 +1,4 @@
-export default function ErrorMessage({
+export default function ErrorMsg({
   visible = true,
   message = "Estado: campo obligatorio faltante",
 }) {

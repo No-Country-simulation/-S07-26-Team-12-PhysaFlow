@@ -2,6 +2,7 @@ import { useState } from "react";
 import { screenSize } from "./hooks/screenSize";
 import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
+import RoundedButton from "./reusableComponents/RoundedButton";
 
 export default function Navbar() {
   const { isMobile } = screenSize();
@@ -23,7 +24,9 @@ export default function Navbar() {
             <div>botones</div>
             <div>botones</div>
           </div> */}
-          <button className="rounded-full bg-gold-lightest p-2">calcular</button>
+         <Link to="/form">
+            <RoundedButton color="gold" text="Calcular"/>
+         </Link>
         </>
       )}
     </div>
