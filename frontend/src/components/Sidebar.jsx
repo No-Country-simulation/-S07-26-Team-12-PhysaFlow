@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export default function Sidebar({ isOpen, setIsOpen }){
     return (
     <aside
@@ -17,13 +18,8 @@ export default function Sidebar({ isOpen, setIsOpen }){
       </div>
 
       <nav className="flex flex-col gap-6 p-6">
-        <a href="#">Inicio</a>
-        <a href="#">Dashboard</a>
-        <a href="#">Información</a>
-
-        <button className="rounded-full bg-gold-lightest p-2">
-          Calcular
-        </button>
+        <Link to="/" onClick={() => setIsOpen(false)}>Inicio</Link>
+        <Link to="/form" onClick={() => setIsOpen(false)}>Calcular</Link>
       </nav>
     </aside>
     

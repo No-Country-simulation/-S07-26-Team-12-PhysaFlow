@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { screenSize } from "../components/hooks/screenSize";
 import PageConainer from "../components/PageContainer";
 import Spacing from "../components/spacing/Spacing";
+import RoundedButton from "../components/reusableComponents/RoundedButton";
+
 
 
 export default function Home() {
@@ -18,11 +20,8 @@ export default function Home() {
             <p >Identificá cuánto MW perdés por sobreaprovisionamiento, en minutos</p>
             <Spacing size="lg"/>
             <div className={`${(isMobile || isTablet) ? "flex justify-center" :""}`}>
-              <Link
-                to="/form"
-                className="w-1/2 bg-green-dark rounded p-3 text-white text-center block"
-              >
-                Calculá ahora
+              <Link to="/form">
+                <RoundedButton text="Calcula ahora" color="green"/>
               </Link>
             </div>
             </div>
@@ -35,7 +34,6 @@ export default function Home() {
                 />
             </div>
           </div>
-
         </PageConainer>
   )
 }
