@@ -3,6 +3,7 @@ import { screenSize } from "../components/hooks/screenSize";
 import PageConainer from "../components/PageContainer";
 import Spacing from "../components/spacing/Spacing";
 
+
 export default function Home() {
   const{isMobile, isTablet}=screenSize()
 
@@ -24,7 +25,6 @@ export default function Home() {
                 Calculá ahora
               </Link>
             </div>
-            
             </div>
             {(isMobile || isTablet) && <Spacing/>}
             <div className={`${(!isMobile && !isTablet) ? "w-1/2":"w-full"} flex items-center justify-center `}>
