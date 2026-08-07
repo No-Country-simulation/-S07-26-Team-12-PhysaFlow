@@ -7,6 +7,8 @@ import swaggerSpec from "./config/swagger.js";
 import { sequelize, connectDB } from "./config/database.js";
 import "./models/index.models.js";
 import indexRouter from "./routes/index.routes.js";
+import errorHandler from "./middlewares/errorHandler.js";
+import AppError from "./utils/AppError.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,11 +33,12 @@ app.use("/health", (req, res) => {
   res.status(200).json("✅ El servidor esta corriendo correctamente");
 });
 
+// Middleware centralizado de errores
+app.use(errorHandler);
+
 // Lenvantar el servidor node.js y de base de datos
 const startServer = async () => {
-  await connectDB(); // TODO: reemplazar sync() con migraciones cuando los modelos esten estables
-
-  // console.log(sequelize.models);
+  await connectDB();
 
   await sequelize.sync({ alter: true });
   app.listen(PORT, () => {
