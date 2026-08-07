@@ -1,19 +1,13 @@
-import {Routes} from "express";
-import {
-    createSharedResult,
-    getSharedResults,
-    getSharedResultByToken,
-    deleteSharedResult,
-} from "../models/Sharedresult.js";
+import { Router } from "express";
 
 const router = Router();
 
-router.post("/", createSharedResult);
+// router.post("/");
 
-router.get("/", getSharedResults);
+// router.get("/");
 
-router.get("/:token", getSharedResultByToken);
+// router.get("/:token");
 
-router.delete("/:id", deleteSharedResult);
+// router.delete("/:id");
 
 export default router;

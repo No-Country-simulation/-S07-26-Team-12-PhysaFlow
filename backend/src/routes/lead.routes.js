@@ -1,22 +1,15 @@
-import {Router} from "express";
-import {
-    createLead,
-    getLeads,
-    getLeadById,
-    updateLead,
-    deleteLead,
-} from "../models/lead.model.js";
+import { Router } from "express";
 
 const router = Router();
 
-router.post("/", createLead);
+// router.post("/");
 
-router.get("/", getLeads);
+// router.get("/");
 
-router.get("/:id", getLeadById);
+// router.get("/:id");
 
-router.put("/:id", updateLead);
+// router.put("/:id");
 
-router.delete("/:id", deleteLead);
+// router.delete("/:id");
 
 export default router;

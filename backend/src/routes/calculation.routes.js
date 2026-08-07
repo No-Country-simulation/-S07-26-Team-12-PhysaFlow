@@ -1,22 +1,15 @@
-import {Router} from "express";
-import {
-    createCalculation,
-    getCalculations,
-    getCalculationById,
-    updateCalculation,
-    deleteCalculation,
-} from "../models/calculation.model.js";
+import { Router } from "express";
 
 const router = Router();
 
-router.post("/", createCalculation);
+// router.post("/");
 
-router.get("/", getCalculations);
+// router.get("/");
 
-router.get("/:id", getCalculationById);
+// router.get("/:id");
 
-router.put("/:id", updateCalculation);
+// router.put("/:id");
 
-router.delete("/:id", deleteCalculation);
+// router.delete("/:id");
 
 export default router;
