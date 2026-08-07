@@ -1,7 +1,7 @@
-import {Router} from "express"
+import { Router } from "express";
+
 import calculationRoutes from "./calculation.routes.js";
-import leadRoutes from "./lead.rotes.js";
-import sharedResultRoutes from "./sharedResultRoutes.js";
+import leadRoutes from "./lead.routes.js";
 import sharedResultRoutes from "./sharedResult.routes.js";
 
 const router = Router();
