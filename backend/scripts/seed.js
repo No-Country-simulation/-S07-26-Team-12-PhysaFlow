@@ -65,7 +65,7 @@ const seed = async () => {
         formula_version: "0.0.1",
       },
       {
-        lead_id: leads[0].id,
+        lead_id: null,
         facility_size_mw: 200,
         utilization_percentage: 90,
         cooling_type: ["immersion"],
@@ -79,7 +79,7 @@ const seed = async () => {
         lead_id: leads[1].id,
         facility_size_mw: 30,
         utilization_percentage: 45,
-        cooling_type: ["air", "liquid"],
+        cooling_type: ["air"],
         stranded_capacity_percent: 15.0,
         stranded_capacity_mw: 4.5,
         annual_loss_min: 15000,
@@ -90,7 +90,7 @@ const seed = async () => {
         lead_id: leads[1].id,
         facility_size_mw: 75,
         utilization_percentage: 80,
-        cooling_type: ["liquid", "immersion"],
+        cooling_type: ["liquid"],
         stranded_capacity_percent: 10.2,
         stranded_capacity_mw: 7.65,
         annual_loss_min: 35000,
@@ -98,10 +98,10 @@ const seed = async () => {
         formula_version: "0.0.1",
       },
       {
-        lead_id: leads[1].id,
+        lead_id: null,
         facility_size_mw: 150,
         utilization_percentage: 70,
-        cooling_type: ["air", "liquid", "immersion"],
+        cooling_type: ["immersion"],
         stranded_capacity_percent: 7.8,
         stranded_capacity_mw: 11.7,
         annual_loss_min: 60000,
@@ -109,32 +109,10 @@ const seed = async () => {
         formula_version: "0.0.2",
       },
       {
-        lead_id: leads[2].id,
-        facility_size_mw: 80,
-        utilization_percentage: 65,
-        cooling_type: ["air", "immersion"],
-        stranded_capacity_percent: 9.0,
-        stranded_capacity_mw: 7.2,
-        annual_loss_min: 30000,
-        annual_loss_max: 48000,
-        formula_version: "0.0.2",
-      },
-      {
-        lead_id: leads[2].id,
-        facility_size_mw: 250,
-        utilization_percentage: 85,
-        cooling_type: ["liquid"],
-        stranded_capacity_percent: 4.2,
-        stranded_capacity_mw: 10.5,
-        annual_loss_min: 100000,
-        annual_loss_max: 150000,
-        formula_version: "0.0.1",
-      },
-      {
-        lead_id: null,
+        lead_id: leads[1].id,
         facility_size_mw: 120,
         utilization_percentage: 55,
-        cooling_type: ["air", "liquid"],
+        cooling_type: ["air", "immersion"],
         stranded_capacity_percent: 18.5,
         stranded_capacity_mw: 22.2,
         annual_loss_min: 70000,
@@ -142,10 +120,32 @@ const seed = async () => {
         formula_version: "0.0.1",
       },
       {
+        lead_id: leads[2].id,
+        facility_size_mw: 80,
+        utilization_percentage: 65,
+        cooling_type: ["liquid"],
+        stranded_capacity_percent: 9.0,
+        stranded_capacity_mw: 7.2,
+        annual_loss_min: 30000,
+        annual_loss_max: 48000,
+        formula_version: "0.0.2",
+      },
+      {
         lead_id: null,
+        facility_size_mw: 250,
+        utilization_percentage: 85,
+        cooling_type: ["immersion"],
+        stranded_capacity_percent: 4.2,
+        stranded_capacity_mw: 10.5,
+        annual_loss_min: 100000,
+        annual_loss_max: 150000,
+        formula_version: "0.0.1",
+      },
+      {
+        lead_id: leads[2].id,
         facility_size_mw: 60,
         utilization_percentage: 50,
-        cooling_type: ["air", "liquid", "immersion"],
+        cooling_type: ["air", "liquid"],
         stranded_capacity_percent: 20.0,
         stranded_capacity_mw: 12.0,
         annual_loss_min: 20000,
@@ -154,6 +154,13 @@ const seed = async () => {
       },
     ]);
     console.log(`✅ ${calculations.length} calculos creados`);
+    console.log(
+      `   Con owner: ${calculations.filter((c) => c.lead_id).length} | Sin owner: ${
+        calculations.filter((c) => !c.lead_id).length
+      } | Híbridos (2+ cooling_type): ${
+        calculations.filter((c) => c.cooling_type.length > 1).length
+      }`,
+    );
 
     // sharedResults
     const now = new Date();
@@ -162,25 +169,25 @@ const seed = async () => {
 
     const sharedResults = await SharedResult.bulkCreate([
       {
-        calculation_id: calculations[0].id,
+        calculation_id: calculations[0].id, // lead0
         share_token: "token-abc-001",
         view_count: 12,
         expiresAt: expires,
       },
       {
-        calculation_id: calculations[3].id,
+        calculation_id: calculations[3].id, // lead1
         share_token: "token-abc-002",
         view_count: 5,
         expiresAt: expires,
       },
       {
-        calculation_id: calculations[8].id,
+        calculation_id: calculations[7].id, // lead2
         share_token: "token-abc-003",
         view_count: 0,
         expiresAt: expires,
       },
       {
-        calculation_id: calculations[4].id,
+        calculation_id: calculations[4].id, // lead1
         share_token: "token-abc-004",
         view_count: 23,
         expiresAt: expires,
