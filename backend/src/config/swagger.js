@@ -28,6 +28,31 @@ const options = {
       },
     ],
 
+    // ── Endpoints ─────────────────────────────────────
+    // Documentados directamente ya que /health no está en un archivo de rutas
+    paths: {
+      "/health": {
+        get: {
+          tags: ["Health"],
+          summary: "Estado del servidor",
+          description: "Verifica que el backend esté activo y funcionando",
+          responses: {
+            200: {
+              description: "Servidor funcionando correctamente",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "string",
+                    example: "✅ El servidor esta corriendo correctamente",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+
     // ── Tags ────────────────────────────────────────────
     // Organizan los endpoints en Swagger UI por categoría
     tags: [
@@ -88,8 +113,9 @@ const options = {
             },
             lead_id: {
               type: "string",
-              format: "uuid",
-              example: "d290f1ee-6c54-4b01-90e6-d701748f0851",
+              format: "nullable",
+              example: null,
+              description: "Puede ser null para cálculos anónimos",
             },
             facility_size_mw: {
               type: "number",
@@ -102,9 +128,13 @@ const options = {
               example: 75.5,
             },
             cooling_type: {
-              type: "string",
-              enum: ["air", "liquid", "immersion"],
-              example: "liquid",
+              type: "array",
+              items: {
+                type: "string",
+                enum: ["air", "liquid", "immersion"],
+              },
+              example: ["air"],
+              description: "Array de tipos de cooling permitidos",
             },
             stranded_capacity_percent: {
               type: "number",
@@ -129,11 +159,6 @@ const options = {
             formula_version: {
               type: "string",
               example: "1.0.0",
-            },
-            calculator_type: {
-              type: "string",
-              enum: ["basic", "advanced"],
-              example: "advanced",
             },
             createdAt: {
               type: "string",
