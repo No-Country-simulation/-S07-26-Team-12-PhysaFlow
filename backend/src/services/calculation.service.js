@@ -36,7 +36,7 @@ class CalculationService {
       cooling_type,
       ...calculationsResults,
 
-      formula_version: "1.0.0",
+      formula_version: "v1.0.1",
     });
   }
 }

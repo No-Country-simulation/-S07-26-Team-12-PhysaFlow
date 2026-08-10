@@ -5,7 +5,7 @@ const COOLING_FACTORS = {
   immersion: 0.03,
 };
 
-// Perdidas economicas por MW de capacidad varada
+// Perdidas economicas por MW de capacidad varada (por defecto 250.000 y 450.000)
 const LOSS_PER_MW = {
   min: 250000,
   max: 450000,
@@ -16,7 +16,7 @@ export const toUtilization = (percentage) => percentage / 100;
 
 // Obtiene el factor de cooling según el tipo
 export const getCoolingFactor = (coolingType) => {
-  COOLING_FACTORS[coolingType[0]];
+  return COOLING_FACTORS[coolingType[0]];
 };
 
 // Ajuste segun rango de utilizacion
@@ -33,10 +33,13 @@ export const calculateStranding = (facilityMW, utilization, coolingFactor) => {
   const stranded_capacity_percent = coolingFactor + adjustment;
   const stranded_capacity_mw = facilityMW * stranded_capacity_percent;
 
+  const annual_loss_min = stranded_capacity_mw * LOSS_PER_MW.min;
+  const annual_loss_max = stranded_capacity_mw * LOSS_PER_MW.max;
+
   return {
     stranded_capacity_percent,
     stranded_capacity_mw,
-    annual_loss_min: stranded_capacity_mw * LOSS_PER_MW.min,
-    annual_loss_max: stranded_capacity_mw * LOSS_PER_MW.max,
+    annual_loss_min,
+    annual_loss_max,
   };
 };

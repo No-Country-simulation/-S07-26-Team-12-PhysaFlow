@@ -14,7 +14,7 @@ const router = Router();
 // router.get("/");
 // router.get("/:id");
 
-router.post("/", catchAsync(controller.create));
+router.post("/calculate", catchAsync(controller.create));
 
 // router.put("/:id");
 // router.delete("/:id");
