@@ -65,6 +65,35 @@ const options = {
     // ── Components ──────────────────────────────────────
     components: {
       schemas: {
+        // ── Schemas de entrada ────────────────────────────
+        CalculationCreateInput: {
+          type: "object",
+          required: ["facility_size_mw", "utilization_percentage", "cooling_type"],
+          properties: {
+            facility_size_mw: {
+              type: "number",
+              format: "float",
+              description: "Tamaño de la instalación en megavatios (debe ser > 0)",
+              example: 20,
+            },
+            utilization_percentage: {
+              type: "number",
+              format: "float",
+              description: "Porcentaje de utilización (0-100)",
+              example: 80,
+            },
+            cooling_type: {
+              type: "array",
+              items: {
+                type: "string",
+                enum: ["air", "liquid", "immersion"],
+              },
+              description:
+                "Array de tipos de cooling permitidos. Sin duplicados. La lógica actual utiliza el primer elemento para el cálculo",
+              example: ["air"],
+            },
+          },
+        },
         // ── Modelos ────────────────────────────────────
         Lead: {
           type: "object",
@@ -139,26 +168,30 @@ const options = {
             stranded_capacity_percent: {
               type: "number",
               format: "float",
-              example: 12.3,
+              description: "Porcentaje de capacidad varada calculado",
+              example: 0.22,
             },
             stranded_capacity_mw: {
               type: "number",
               format: "float",
-              example: 12.3,
+              description: "Capacidad varada en megavatios",
+              example: 4.4,
             },
             annual_loss_min: {
               type: "number",
               format: "float",
-              example: 50000,
+              description: "Pérdida anual estimada mínima en USD",
+              example: 1100000,
             },
             annual_loss_max: {
               type: "number",
               format: "float",
-              example: 80000,
+              description: "Pérdida anual estimada máxima en USD",
+              example: 1980000,
             },
             formula_version: {
               type: "string",
-              example: "1.0.0",
+              example: "v1.0.1",
             },
             createdAt: {
               type: "string",
@@ -337,7 +370,8 @@ const options = {
   },
 
   // Lee automáticamente los archivos js en src/routes para documentar endpoints
-  apis: [join(__dirname, "..", "routes", "**", "*.js")],
+  // .replace() convierte backslashes a forward slashes para compatibilidad con Windows
+  apis: [join(__dirname, "..", "routes", "**", "*.js").replace(/\\/g, "/")],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
