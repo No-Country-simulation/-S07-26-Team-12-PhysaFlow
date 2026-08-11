@@ -23,6 +23,7 @@ export default function CalculatorFormPage() {
           } flex justify-center items-center `}
         >
           <CalculatorForm />
+        
         </section>
 
         {(isMobile || isTablet) && <Spacing />}
