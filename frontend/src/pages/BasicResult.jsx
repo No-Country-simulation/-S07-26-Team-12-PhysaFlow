@@ -1,16 +1,25 @@
 import { screenSize } from "../components/hooks/screenSize";
 import PageConainer from "../components/PageContainer";
 import Spacing from "../components/spacing/Spacing";
+import { useLocation } from "react-router-dom";
+
+
 
 export default function BasicResult() {
   const { isMobile } = screenSize();
+  const location = useLocation();
+  const result = location.state;
+
+
+  console.log(result, "ppppppp");
+
   return (
     <PageConainer>
       <div className={`flex h-full ${isMobile ? " flex-col" : "flex-row"}`}>
         <div
           className={`${!isMobile ? "w-1/2" : "w-full"}  p-4 flex flex-col justify-center items-center`}
         >
-          <p className="data-big text-center">38.4 MW estancados</p>
+          <p className="data-big text-center"> {Math.round(result.data.stranded_capacity_mw)}MW estancados</p>
           <Spacing size="lg" />
           <p className="data-small">−9.6 MW overhead · 42 MW instalados</p>
           <Spacing size="lg" />
