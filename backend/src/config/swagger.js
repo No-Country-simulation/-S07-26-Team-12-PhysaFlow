@@ -28,6 +28,31 @@ const options = {
       },
     ],
 
+    // ── Endpoints ─────────────────────────────────────
+    // Documentados directamente ya que /health no está en un archivo de rutas
+    paths: {
+      "/health": {
+        get: {
+          tags: ["Health"],
+          summary: "Estado del servidor",
+          description: "Verifica que el backend esté activo y funcionando",
+          responses: {
+            200: {
+              description: "Servidor funcionando correctamente",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "string",
+                    example: "✅ El servidor esta corriendo correctamente",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+
     // ── Tags ────────────────────────────────────────────
     // Organizan los endpoints en Swagger UI por categoría
     tags: [
@@ -40,6 +65,35 @@ const options = {
     // ── Components ──────────────────────────────────────
     components: {
       schemas: {
+        // ── Schemas de entrada ────────────────────────────
+        CalculationCreateInput: {
+          type: "object",
+          required: ["facility_size_mw", "utilization_percentage", "cooling_type"],
+          properties: {
+            facility_size_mw: {
+              type: "number",
+              format: "float",
+              description: "Tamaño de la instalación en megavatios (debe ser > 0)",
+              example: 20,
+            },
+            utilization_percentage: {
+              type: "number",
+              format: "float",
+              description: "Porcentaje de utilización (0-100)",
+              example: 80,
+            },
+            cooling_type: {
+              type: "array",
+              items: {
+                type: "string",
+                enum: ["air", "liquid", "immersion"],
+              },
+              description:
+                "Array de tipos de cooling permitidos. Sin duplicados. La lógica actual utiliza el primer elemento para el cálculo",
+              example: ["air"],
+            },
+          },
+        },
         // ── Modelos ────────────────────────────────────
         Lead: {
           type: "object",
@@ -88,8 +142,9 @@ const options = {
             },
             lead_id: {
               type: "string",
-              format: "uuid",
-              example: "d290f1ee-6c54-4b01-90e6-d701748f0851",
+              format: "nullable",
+              example: null,
+              description: "Puede ser null para cálculos anónimos",
             },
             facility_size_mw: {
               type: "number",
@@ -102,38 +157,41 @@ const options = {
               example: 75.5,
             },
             cooling_type: {
-              type: "string",
-              enum: ["air", "liquid", "immersion"],
-              example: "liquid",
+              type: "array",
+              items: {
+                type: "string",
+                enum: ["air", "liquid", "immersion"],
+              },
+              example: ["air"],
+              description: "Array de tipos de cooling permitidos",
             },
             stranded_capacity_percent: {
               type: "number",
               format: "float",
-              example: 12.3,
+              description: "Porcentaje de capacidad varada calculado",
+              example: 0.22,
             },
             stranded_capacity_mw: {
               type: "number",
               format: "float",
-              example: 12.3,
+              description: "Capacidad varada en megavatios",
+              example: 4.4,
             },
             annual_loss_min: {
               type: "number",
               format: "float",
-              example: 50000,
+              description: "Pérdida anual estimada mínima en USD",
+              example: 1100000,
             },
             annual_loss_max: {
               type: "number",
               format: "float",
-              example: 80000,
+              description: "Pérdida anual estimada máxima en USD",
+              example: 1980000,
             },
             formula_version: {
               type: "string",
-              example: "1.0.0",
-            },
-            calculator_type: {
-              type: "string",
-              enum: ["basic", "advanced"],
-              example: "advanced",
+              example: "v1.0.1",
             },
             createdAt: {
               type: "string",
@@ -312,7 +370,8 @@ const options = {
   },
 
   // Lee automáticamente los archivos js en src/routes para documentar endpoints
-  apis: [join(__dirname, "..", "routes", "**", "*.js")],
+  // .replace() convierte backslashes a forward slashes para compatibilidad con Windows
+  apis: [join(__dirname, "..", "routes", "**", "*.js").replace(/\\/g, "/")],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
