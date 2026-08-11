@@ -2,25 +2,27 @@ import { useState } from "react";
 import RoundedButton from "../reusableComponents/RoundedButton";
 import Spacing from "../spacing/Spacing";
 import CalculatorInput from "./calculatorComponents/CalculatorInput";
-import ErrorMsg from "./calculatorComponents/ErrorMsg";
+import { calculateCapacity } from "../../services/calculatorService";
 
 const coolingOpt = [
   { name: "Air", value: ["air"] },
   { name: "Liquid", value: ["liquid"] },
-  { name: "Imersion", value: ["imersion"] },
+  { name: "Immersion", value: ["immersion"] },
   { name: "Air + Liquid", value: ["air", "liquid"] },
-  { name: "Air + Imersion", value: ["air", "imersion"] },
-  { name: "Liquid + Imersion", value: ["liquid", "imersion"] },
-  { name: "Air + Liquid + Imersion", value: ["air", "liquid", "imersion"] },
+  { name: "Air + Immersion", value: ["air", "immersion"] },
+  { name: "Liquid + Immersion", value: ["liquid", "immersion"] },
+  { name: "Air + Liquid + Immersion", value: ["air", "liquid", "immersion"] },
 ];
 
 export default function CalculatorForm() {
+  const [result, setResult] = useState(null);
+  const [apiError, setApiError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [size, setSize] = useState("");
   const [usage, setUsage] = useState("");
   const [coolingOption, setCoolingOption] = useState("");
   const [errors, setErrors] = useState({});
-
 
   const validateForm = () => {
     const newErrors = {};
@@ -46,7 +48,7 @@ export default function CalculatorForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isValid = validateForm();
     if (!isValid) {
@@ -56,11 +58,26 @@ export default function CalculatorForm() {
       (item) => item.name === coolingOption,
     );
 
+    const data = {
+      size: Number(size),
+      usage: Number(usage),
+      cooling: selectedCooling?.value,
+    };
 
-    try{await ""}catch (error){ console.log("error:", error)}finally{
-      setSize("")
-      setUsage("")
-      setCoolingOption("")
+    try {
+      setLoading(true);
+      setApiError("");
+      const result = await calculateCapacity(data);
+      setResult(result);
+      console.log("result", result);
+    } catch (error) {
+      console.log("error:", error);
+      setApiError("No pudimos calcular la capacidad. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
+      setSize("");
+      setUsage("");
+      setCoolingOption("");
     }
 
     console.log("Cooling:", selectedCooling, size, usage);
@@ -120,9 +137,7 @@ export default function CalculatorForm() {
             })}
           </select>
           {errors.cooling && (
-            <span className="data-small text-red-500">
-              {errors.cooling}
-            </span>
+            <span className="data-small text-red-500">{errors.cooling}</span>
           )}
         </div>
 
