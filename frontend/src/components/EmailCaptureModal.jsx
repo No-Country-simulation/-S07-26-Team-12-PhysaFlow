@@ -1,7 +1,28 @@
+import { useState } from "react";
 import { screenSize } from "./hooks/screenSize";
 
 export default function EmailCaptureModal({ onClose }) {
   const { isMobile } = screenSize();
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const normalizedEmail = email.trim();
+
+    if (!normalizedEmail) {
+      setEmailError("Ingresá tu email");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      setEmailError("Ingresá un email válido");
+      return;
+    }
+
+    setEmailError("");
+  }
 
   return (
     <div
@@ -91,7 +112,11 @@ export default function EmailCaptureModal({ onClose }) {
           </li>
         </ul>
 
-        <form className={isMobile ? "mt-4" : "mt-6"} onSubmit={(event) => event.preventDefault()}>
+        <form
+          className={isMobile ? "mt-4" : "mt-6"}
+          noValidate
+          onSubmit={handleSubmit}
+        >
           <label htmlFor="capture-email" className="sr-only">
             Tu email
           </label>
@@ -100,10 +125,30 @@ export default function EmailCaptureModal({ onClose }) {
             name="email"
             type="email"
             placeholder="nombre@empresa.com"
-            className={`w-full rounded-xl border border-green-lightest bg-[#f7f5eb] text-green-darker outline-none placeholder:text-green-dark/80 focus:border-green-light focus:ring-2 focus:ring-green-light/30 ${
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              setEmailError("");
+            }}
+            aria-invalid={Boolean(emailError)}
+            aria-describedby={emailError ? "capture-email-error" : undefined}
+            className={`w-full rounded-xl border bg-[#f7f5eb] text-green-darker outline-none placeholder:text-green-dark/80 focus:ring-2 focus:ring-green-light/30 ${
+              emailError
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
+                : "border-green-lightest focus:border-green-light"
+            } ${
               isMobile ? "px-3 py-2.5 text-[10px]" : "px-4 py-3 text-sm"
             }`}
           />
+          {emailError && (
+            <p
+              id="capture-email-error"
+              role="alert"
+              className={`mt-2 text-red-600 ${isMobile ? "text-[9px]" : "text-xs"}`}
+            >
+              {emailError}
+            </p>
+          )}
           <button
             type="submit"
             className={`mt-3 w-full rounded-xl bg-gold-dark px-4 font-semibold text-green-darker transition hover:bg-gold-darker focus:outline-none focus:ring-2 focus:ring-gold-dark/50 ${
