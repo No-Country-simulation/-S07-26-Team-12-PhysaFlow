@@ -1,13 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { screenSize } from "./hooks/screenSize";
 
 export default function EmailCaptureModal({ onClose }) {
   const { isMobile } = screenSize();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    if (isLoading) return;
 
     const normalizedEmail = email.trim();
 
@@ -22,6 +27,14 @@ export default function EmailCaptureModal({ onClose }) {
     }
 
     setEmailError("");
+    setIsLoading(true);
+
+    // Simula la respuesta del backend hasta que exista el endpoint real.
+    setTimeout(() => {
+      navigate("/full-result", {
+        state: { showUnlockSuccess: true },
+      });
+    }, 900);
   }
 
   return (
@@ -48,6 +61,7 @@ export default function EmailCaptureModal({ onClose }) {
           type="button"
           onClick={onClose}
           aria-label="Cerrar"
+          disabled={isLoading}
           className={`absolute right-5 top-4 text-2xl leading-none text-green-dark transition hover:text-green-darker ${
             isMobile ? "sr-only" : ""
           }`}
@@ -127,12 +141,14 @@ export default function EmailCaptureModal({ onClose }) {
             placeholder="nombre@empresa.com"
             value={email}
             onChange={(event) => {
+              if (isLoading) return;
               setEmail(event.target.value);
               setEmailError("");
             }}
+            disabled={isLoading}
             aria-invalid={Boolean(emailError)}
             aria-describedby={emailError ? "capture-email-error" : undefined}
-            className={`w-full rounded-xl border bg-[#f7f5eb] text-green-darker outline-none placeholder:text-green-dark/80 focus:ring-2 focus:ring-green-light/30 ${
+            className={`w-full rounded-xl border bg-[#f7f5eb] text-green-darker outline-none placeholder:text-green-dark/80 focus:ring-2 focus:ring-green-light/30 disabled:cursor-not-allowed disabled:opacity-60 ${
               emailError
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
                 : "border-green-lightest focus:border-green-light"
@@ -151,11 +167,16 @@ export default function EmailCaptureModal({ onClose }) {
           )}
           <button
             type="submit"
+            disabled={isLoading}
             className={`mt-3 w-full rounded-xl bg-gold-dark px-4 font-semibold text-green-darker transition hover:bg-gold-darker focus:outline-none focus:ring-2 focus:ring-gold-dark/50 ${
               isMobile ? "py-2.5 text-[10px]" : "py-3 text-sm"
             }`}
           >
-            {isMobile ? "Desbloquear análisis →" : "Desbloquear análisis completo →"}
+            {isLoading
+              ? "Desbloqueando análisis..."
+              : isMobile
+                ? "Desbloquear análisis →"
+                : "Desbloquear análisis completo →"}
           </button>
         </form>
 
@@ -168,6 +189,7 @@ export default function EmailCaptureModal({ onClose }) {
         <button
           type="button"
           onClick={onClose}
+          disabled={isLoading}
           className={`font-semibold text-green-dark transition hover:text-green-darker ${
             isMobile ? "mt-3 block w-full text-center text-[9px]" : "mt-4 text-left text-sm"
           }`}
