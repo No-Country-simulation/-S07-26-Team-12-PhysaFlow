@@ -3,6 +3,8 @@ import RoundedButton from "../reusableComponents/RoundedButton";
 import Spacing from "../spacing/Spacing";
 import CalculatorInput from "./calculatorComponents/CalculatorInput";
 import { calculateCapacity } from "../../services/calculatorService";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const coolingOpt = [
   { name: "Air", value: ["air"] },
@@ -15,7 +17,9 @@ const coolingOpt = [
 ];
 
 export default function CalculatorForm() {
-  const [result, setResult] = useState(null);
+  const navigate = useNavigate();
+
+
   const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -49,27 +53,45 @@ export default function CalculatorForm() {
   };
 
   const handleSubmit = async (e) => {
+  //   const saludo ={
+	// 	"id": "5c475ab7-f303-4fa2-8c06-5cf8509e1efa",
+	// 	"lead_id": null,
+	// 	"facility_size_mw": 22,
+	// 	"utilization_percentage": 60,
+	// 	"cooling_type": [
+	// 		"air"
+	// 	],
+	// 	"stranded_capacity_percent": 0.18,
+	// 	"stranded_capacity_mw": 3.96,
+	// 	"annual_loss_min": 990000,
+	// 	"annual_loss_max": 1782000,
+	// 	"formula_version": "v1.0.1",
+	// 	"updatedAt": "2026-08-11T18:24:18.860Z",
+	// 	"createdAt": "2026-08-11T18:24:18.860Z"
+	// }
+    //navigate("/result", {state: saludo})
     e.preventDefault();
     const isValid = validateForm();
     if (!isValid) {
       return;
     }
+
     const selectedCooling = coolingOpt.find(
       (item) => item.name === coolingOption,
     );
 
     const data = {
-      size: Number(size),
-      usage: Number(usage),
-      cooling: selectedCooling?.value,
+      facility_size_mw: Number(size),
+      utilization_percentage: Number(usage),
+      cooling_type: selectedCooling?.value,
     };
 
     try {
       setLoading(true);
       setApiError("");
-      const result = await calculateCapacity(data);
-      setResult(result);
-      console.log("result", result);
+      const resultRes = await calculateCapacity(data);
+      navigate("/result", {state: resultRes})
+      //console.log("form info", resultRes)
     } catch (error) {
       console.log("error:", error);
       setApiError("No pudimos calcular la capacidad. Intenta nuevamente.");
@@ -78,10 +100,11 @@ export default function CalculatorForm() {
       setSize("");
       setUsage("");
       setCoolingOption("");
+     
     }
 
-    console.log("Cooling:", selectedCooling, size, usage);
-    console.log("values:", selectedCooling?.value);
+   
+  
   };
 
   return (
