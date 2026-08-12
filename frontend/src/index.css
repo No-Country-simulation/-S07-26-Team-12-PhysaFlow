@@ -16,6 +16,7 @@
     --color-background: #93a798;
     --color-gold-dark: #C9A227;
     --color-gold-darker: #A8811B;
+    --color-gold-darkest:#7F6115;
     --color-green-darker: #1B4632;
     --color-green-dark: #2E6B4C;
     --color-green-light: #6FA98A;
@@ -50,6 +51,12 @@
         color: var(--color-gold-dark);
         font-size: 56px;
     }
+     .display-data-big{
+        font-family: var(--font-title);
+        font-weight: 900;
+        color: var(--color-gold-darker);
+        font-size: 72px;
+    }
     .display-h1{
         font-family: var(--font-title);
         font-weight: 600;
@@ -75,21 +82,34 @@
         color: var(--color-gold-lightest);
         font-size: 14px;
     }
+
+
     .data-big{
         font-family: var(--font-data);
         font-size: 44px;
         font-weight: 600;
     }
+    .result-amount{
+        font-family: var(--font-data);
+        font-size: 30px;
+        font-weight: 600;
+        
+    }
     .data-medium{
         font-family: var(--font-data);
-        font-weight: 500;
-        font-size: 18px;
-        color:var(--color-green-light);
+        font-weight: 400;
+        font-size: 14px;
+        color:var(--color-gold-lightest);
     }
     .data-small{
         font-size: 12px;
         font-family: var(--font-data);
         color: var(--color-gold-light);
+    }
+
+    .data-small-green{
+        font-size: 12px;
+        font-family: var(--font-data);
     }
 
     /*Box sizing*/
