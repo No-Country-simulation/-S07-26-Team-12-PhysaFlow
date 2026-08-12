@@ -12,7 +12,42 @@ const controller = new CalculationController(service);
 const router = Router();
 
 // router.get("/");
-// router.get("/:id");
+
+/**
+ * @swagger
+ * /api/calculations/{id}:
+ *   get:
+ *     tags: [Calculation]
+ *     summary: Obtener un cálculo por ID
+ *     description: Recupera un cálculo de capacidad varada existente mediante su UUID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: UUID del cálculo
+ *         example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+ *     responses:
+ *       200:
+ *         description: Cálculo encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/Calculation'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get("/:id", catchAsync(controller.findById));
 
 /**
  * @swagger
