@@ -8,7 +8,6 @@ import Spacing from "../components/spacing/Spacing";
 import EmailCaptureModal from "../components/EmailCaptureModal";
 import RoundedButton from "../components/reusableComponents/RoundedButton";
 import { formatAmount } from "../components/hooks/formatAmount";
-import { getCalculation } from "../services/calculatorService";
 
 export const mockCalculationResult = {
   facilitySize: 666,
@@ -90,35 +89,37 @@ export default function BasicResult() {
         </p>
 
         <Spacing size="xs" />
+
         <h1 className="display-h1">Tenés capacidad estancada</h1>
 
         <div className={`flex ${isMobile ? "flex-col" : "flex-row"}`}>
-          <div className="p-4 flex flex-col justify-center items-center">
+          <div className="flex flex-col items-center justify-center p-4">
             <h1 className="text-center display-data-big">
               {Math.round(dataInfo.strandedPercent * 100)}%
             </h1>
-
-            <p className="text-center data-small-green">CAPACIDAD ESTANCADA</p>
+            <p className="text-center data-small-green">
+              CAPACIDAD ESTANCADA
+            </p>
           </div>
 
-          <div className="p-4 flex flex-col justify-center items-center">
+          <div className="flex flex-col items-center justify-center p-4">
             <h1 className="text-center display-data-big">
               {Math.round(dataInfo.strandedMw * 10) / 10} MW
             </h1>
-
             <p className="text-center data-small-green">SIN USAR</p>
           </div>
         </div>
 
         <Spacing size="xs" />
 
-        <div className="bg-green-darker p-3 rounded rounded-xl min-w-1/2">
+        <div className="min-w-1/2 rounded-xl bg-green-darker p-3">
           <h2 className="data-medium text-center">
             PÉRDIDA FINANCIERA ANUAL ESTIMADA
           </h2>
 
-          <h1 className="p-2 result-amount text-white text-center">
-            {formatAmount(dataInfo.minLoss)} - {formatAmount(dataInfo.maxLoss)}
+          <h1 className="result-amount p-2 text-center text-white">
+            {formatAmount(dataInfo.minLoss)} -{" "}
+            {formatAmount(dataInfo.maxLoss)}
           </h1>
         </div>
 
@@ -152,8 +153,8 @@ export default function BasicResult() {
 
         <Spacing size="md" />
 
-        <div className="bg-green-lightest p-3 rounded rounded-lg flex justify-center items-center">
-          <p className="p-3 data-big text-xl">i</p>
+        <div className="flex items-center justify-center rounded-lg bg-green-lightest p-3">
+          <p className="data-big p-3 text-xl">i</p>
 
           <p className="p-3">
             Este resultado es gratis y completo. Si querés comparar escenarios,
@@ -164,7 +165,9 @@ export default function BasicResult() {
       </div>
 
       {isEmailModalOpen && (
-        <EmailCaptureModal onClose={() => setIsEmailModalOpen(false)} />
+        <EmailCaptureModal
+          onClose={() => setIsEmailModalOpen(false)}
+        />
       )}
     </PageConainer>
   );

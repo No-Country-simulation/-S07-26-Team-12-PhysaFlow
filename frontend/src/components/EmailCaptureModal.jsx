@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { screenSize } from "./hooks/screenSize";
+import Loader from "./reusableComponents/Loader";
 
 export default function EmailCaptureModal({ onClose }) {
   const { isMobile } = screenSize();
@@ -172,11 +173,15 @@ export default function EmailCaptureModal({ onClose }) {
               isMobile ? "py-2.5 text-[10px]" : "py-3 text-sm"
             }`}
           >
-            {isLoading
-              ? "Desbloqueando análisis..."
-              : isMobile
-                ? "Desbloquear análisis →"
-                : "Desbloquear análisis completo →"}
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <Loader size="sm" />
+              </span>
+            ) : isMobile ? (
+              "Desbloquear análisis →"
+            ) : (
+              "Desbloquear análisis completo →"
+            )}
           </button>
         </form>
 
