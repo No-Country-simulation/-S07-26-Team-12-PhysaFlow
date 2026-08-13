@@ -10,7 +10,7 @@ export default function CalculatorInput({
 }) {
   return (
     <div className="flex flex-col gap-1 w-full ">
-      <label htmlFor={name} className="label-eyebrow">
+      <label htmlFor={name} className="data-small-green">
         {label}
       </label>
 
@@ -20,7 +20,7 @@ export default function CalculatorInput({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`w-full px-3 py-2 bg-gray-100 rounded border ${hasError ? "border-red-500" :"border-green-lightest"} `}
+        className={`w-full px-3 py-2 bg-page-background rounded  ${hasError ? "border border-red-500" :""} `}
         // value, onChange, etc. se conectan más adelante
       />
 

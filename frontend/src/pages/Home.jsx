@@ -9,6 +9,7 @@ import RoundedButton from "../components/reusableComponents/RoundedButton";
 export default function Home() {
   const{isMobile, isTablet}=screenSize()
 
+
   return (
         <PageConainer>
           <div className={`flex ${(isMobile || isTablet) ? "flex-col" :"flex-row"} h-full `}>
@@ -34,6 +35,7 @@ export default function Home() {
                 />
             </div>
           </div>
+   
         </PageConainer>
   )
 }
