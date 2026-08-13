@@ -7,11 +7,7 @@ export const calculateCapacity = async (data) => {
 };
 
 
-export const getCapacity = () => {
-  try{
-      const response = api.get("/calculations/:id");
-  }catch (error) {
-    console.error('Hubo un error al obtener la información:', error);
-  }
+export const getCalculation = async (id) => {
+  const response = await api.get(`/calculations/${id}`);
   return response.data;
 };
