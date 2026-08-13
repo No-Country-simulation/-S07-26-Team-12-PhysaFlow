@@ -74,7 +74,7 @@ export default function CalculatorForm() {
       setLoading(true);
       setApiError("");
       const resultRes = await calculateCapacity(data);
-      navigate("/result", {state: resultRes})
+      navigate(`/result/${resultRes.data.id}`, {state: resultRes})
       console.log("form info", resultRes)
     } catch (error) {
       console.log("error:", error);

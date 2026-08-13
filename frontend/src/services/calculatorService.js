@@ -5,3 +5,13 @@ export const calculateCapacity = async (data) => {
 
   return response.data;
 };
+
+
+export const getCapacity = () => {
+  try{
+      const response = api.get("/calculations/:id");
+  }catch (error) {
+    console.error('Hubo un error al obtener la información:', error);
+  }
+  return response.data;
+};
