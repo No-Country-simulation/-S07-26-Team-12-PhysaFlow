@@ -3,45 +3,20 @@ import { screenSize } from "../components/hooks/screenSize";
 import Spacing from "../components/spacing/Spacing";
 import PageContainer from "../components/PageContainer";
 
- 
 export default function CalculatorFormPage() {
   const { isMobile, isTablet } = screenSize();
 
   return (
     <PageContainer>
-
-      {/* Contenido principal: formulario + panel de ayuda */}
-      <main
-        className={`w-full flex-1 flex ${
-          isMobile || isTablet ? "flex-col" : "flex-row"
-        } gap-8 px-6 py-8`}
-      >
-        {/* Columna izquierda: formulario */}
-        <section
-          className={`${
-            isMobile || isTablet ? "w-full" : "w-1/2"
-          } flex justify-center items-center `}
-        >
-          <CalculatorForm />
-        
-        </section>
-
-        {(isMobile || isTablet) && <Spacing />}
-
-        {/* Columna derecha: panel de ayuda / ejemplo de datos */}
-        <div
-          className={`${
-            isMobile || isTablet ? "w-full" : "w-1/2"
-          } flex items-center justify-center border border-dashed min-h-[300px]`}
-        >
-          <p className="body-large text-center">
-            Panel de ayuda / ejemplo de datos
-            <br />
-            — definido en Sprint 3 —
-          </p>
-        </div>
-      </main>
-   
+      <div className="flex flex-col justify-center items-center ">
+        <h1 className="display-h1 text-green-darker">¿Cuánta capacidad estás desperdiciando?</h1>
+        <Spacing size="xs"/>
+        <p>3 datos. Menos de 3 minutos. Sin registro.</p>
+        <Spacing size="lg"/>
+        <CalculatorForm />
+        <Spacing/>
+        <p>Gratis · Sin email · Resultado inmediato</p>
+      </div>
     </PageContainer>
   );
 }

@@ -75,10 +75,28 @@ const Calculation = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    
+    expiresAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+
   },
   {
     tableName: "calculations",
     timestamps: true,
+    hooks: {
+      beforeValidate: (calculation) => {
+        if (!calculation.lead_id) {
+
+          const expirationDate = new Date();
+          expirationDate.setDate(expirationDate.getDate() + 7);
+          calculation.expiresAt = expirationDate;
+        } else {
+          calculation.expiresAt = null
+        }
+      }
+    }
   },
 );
 

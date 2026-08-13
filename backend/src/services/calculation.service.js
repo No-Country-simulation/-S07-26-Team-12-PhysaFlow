@@ -1,3 +1,4 @@
+import AppError from "../utils/AppError.js";
 import {
   calculateStranding,
   getCoolingFactor,
@@ -12,6 +13,15 @@ class CalculationService {
   // Obtener todos los calculos
   async getAll(options = {}) {
     return this.calculationRepository.findAll(options);
+  }
+
+  // GET /api/calculations/:id
+  async findById(id) {
+    const calculation = await this.calculationRepository.findById(id);
+    if (!calculation) {
+      throw new AppError("Cálculo no encontrado", 404);
+    }
+    return calculation;
   }
 
   // POST /api/calculations/

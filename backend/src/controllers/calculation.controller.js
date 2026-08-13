@@ -4,6 +4,13 @@ class CalculationController {
   constructor(calculationService) {
     this.calculationService = calculationService;
     this.create = this.create.bind(this);
+    this.findById = this.findById.bind(this);
+  }
+
+  async findById(req, res) {
+    const calculation = await this.calculationService.findById(req.params.id);
+
+    res.status(200).json({ success: true, data: calculation });
   }
 
   async create(req, res) {
