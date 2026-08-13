@@ -78,7 +78,7 @@ const Calculation = sequelize.define(
     
     expiresAt: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
 
   },
@@ -90,7 +90,7 @@ const Calculation = sequelize.define(
         if (!calculation.lead_id) {
 
           const expirationDate = new Date();
-          expirationDate.setDate(expirationDate.getDate() = 7);
+          expirationDate.setDate(expirationDate.getDate() + 7);
           calculation.expiresAt = expirationDate;
         } else {
           calculation.expiresAt = null
