@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 
 import { screenSize } from "../components/hooks/screenSize";
@@ -28,6 +28,7 @@ const mapResultData = (data) => ({
   strandedMw: data.stranded_capacity_mw,
   minLoss: data.annual_loss_min,
   maxLoss: data.annual_loss_max,
+  id: data.id,
 });
 
 export default function BasicResult() {
@@ -39,29 +40,45 @@ export default function BasicResult() {
     location.state ?? null,
   );
 
-  // ---------------------------------------------------------
-  // GET
-  // useEffect(() => {
-  //   if (calculationResult || !id) return;
-  // const fetchCalculation = async () => {
-  //   try {
-  //     const data = await getCalculation(id);
-  //     setCalculationResult(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  useEffect(() => {
+    if (calculationResult || !id) return;
+    const fetchCalculation = async () => {
+      try {
+        const data = await getCalculation(id);
+        setCalculationResult(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  // fetchCalculation();
-  //
-  // }, [id, calculationResult]);
-  // ---------------------------------------------------------
-
+    fetchCalculation();
+  }, [id, calculationResult]);
 
   const dataInfo = calculationResult?.data
     ? mapResultData(calculationResult.data)
     : mockCalculationResult;
 
+  const handleShare = async () => {
+    const resultUrl = `${window.location.origin}/result/${dataInfo.id}`;
+
+    const shareData = {
+      title: "PhysaFlow Calculation Result",
+      text: "View my PhysaFlow calculation result",
+      url: resultUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(resultUrl);
+
+        alert("Link copied to clipboard");
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
 
   return (
     <PageConainer>
@@ -113,15 +130,25 @@ export default function BasicResult() {
 
         <Spacing size="md" />
 
-        <div className={`flex ${isMobile ? "flex-col" : "flex-row"}`}>
-          <RoundedButton
-            text="Ver breakdown completo + comparar escenarios"
-            color="gold"
-            onClick={() => setIsEmailModalOpen(true)}
-          />
+        {location.state ? (
+          <div className={`flex ${isMobile ? "flex-col" : "flex-row"}`}>
+            <RoundedButton
+              text="Ver breakdown completo + comparar escenarios"
+              color="gold"
+              onClick={() => setIsEmailModalOpen(true)}
+            />
 
-          <RoundedButton text="Compartir con un colega" color="border" />
-        </div>
+            <RoundedButton
+              onClick={handleShare}
+              text="Compartir con un colega"
+              color="border"
+            />
+          </div>
+        ) : (
+          <Link to="/form">
+            <RoundedButton text="Calcular mi capacidad" color="gold" />
+          </Link>
+        )}
 
         <Spacing size="md" />
 
