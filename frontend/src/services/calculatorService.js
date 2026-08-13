@@ -5,3 +5,9 @@ export const calculateCapacity = async (data) => {
 
   return response.data;
 };
+
+
+export const getCalculation = async (id) => {
+  const response = await api.get(`/calculations/${id}`);
+  return response.data;
+};
