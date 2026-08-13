@@ -3,6 +3,8 @@ import RoundedButton from "../reusableComponents/RoundedButton";
 import Spacing from "../spacing/Spacing";
 import CalculatorInput from "./calculatorComponents/CalculatorInput";
 import { calculateCapacity } from "../../services/calculatorService";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const coolingOpt = [
   { name: "Air", value: ["air"] },
@@ -15,7 +17,9 @@ const coolingOpt = [
 ];
 
 export default function CalculatorForm() {
-  const [result, setResult] = useState(null);
+  const navigate = useNavigate();
+
+
   const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -49,27 +53,29 @@ export default function CalculatorForm() {
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
     const isValid = validateForm();
     if (!isValid) {
       return;
     }
+
     const selectedCooling = coolingOpt.find(
       (item) => item.name === coolingOption,
     );
 
     const data = {
-      size: Number(size),
-      usage: Number(usage),
-      cooling: selectedCooling?.value,
+      facility_size_mw: Number(size),
+      utilization_percentage: Number(usage),
+      cooling_type: selectedCooling?.value,
     };
 
     try {
       setLoading(true);
       setApiError("");
-      const result = await calculateCapacity(data);
-      setResult(result);
-      console.log("result", result);
+      const resultRes = await calculateCapacity(data);
+      navigate("/result", {state: resultRes})
+      console.log("form info", resultRes)
     } catch (error) {
       console.log("error:", error);
       setApiError("No pudimos calcular la capacidad. Intenta nuevamente.");
@@ -78,10 +84,11 @@ export default function CalculatorForm() {
       setSize("");
       setUsage("");
       setCoolingOption("");
+     
     }
 
-    console.log("Cooling:", selectedCooling, size, usage);
-    console.log("values:", selectedCooling?.value);
+   
+  
   };
 
   return (
