@@ -11,16 +11,16 @@ const SharedResult = sequelize.define(
       allowNull: false,
     },
 
-    // calculation_id: {
-    //     type: DataTypes.UUID,
-    //     allowNull: false,
-    //     references:{
-    //         model: "calculations",
-    //         key: "id",
-    //     },
-    //     onUpdate: "CASCADE",
-    //     onDelete: "CASCADE",
-    // },
+    calculation_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references:{
+            model: "calculations",
+            key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+    },
 
     view_count: {
       type: DataTypes.INTEGER,
@@ -32,17 +32,6 @@ const SharedResult = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-    },
-
-    expiresAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: () => {
-        //Se agrego un tiempo de vigencia a 7 dias
-        const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 7);
-        return expirationDate;
-      },
     },
   },
 

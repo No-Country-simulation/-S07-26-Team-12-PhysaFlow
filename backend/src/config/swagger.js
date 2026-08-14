@@ -370,8 +370,7 @@ const options = {
   },
 
   // Lee automáticamente los archivos js en src/routes para documentar endpoints
-  // .replace() convierte backslashes a forward slashes para compatibilidad con Windows
-  apis: [join(__dirname, "..", "routes", "**", "*.js").replace(/\\/g, "/")],
+  apis: [join(__dirname, "..", "routes", "**", "*.js").split("\\").join("/")],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
