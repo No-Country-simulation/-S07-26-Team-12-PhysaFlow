@@ -5,6 +5,7 @@ import CalculatorInput from "./calculatorComponents/CalculatorInput";
 import { calculateCapacity } from "../../services/calculatorService";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Loader from "../reusableComponents/Loader";
 
 const coolingOpt = [
   { name: "Air", value: ["air"] },
@@ -87,6 +88,8 @@ export default function CalculatorForm() {
 
   return (
     <div className="flex flex-col w-full max-w-xl justify-center border border-green-lightest bg-white p-4 rounded-lg">
+      {loading ? <Loader/> : 
+      <>
       <Spacing size="xs" />
       <form onSubmit={handleSubmit}>
         <CalculatorInput
@@ -173,6 +176,9 @@ export default function CalculatorForm() {
           />
         </div>
       </form>
+      </>
+      }
+      
     </div>
   );
 }
