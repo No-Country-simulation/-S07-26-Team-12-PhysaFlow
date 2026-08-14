@@ -24,6 +24,11 @@ class CalculationService {
     return calculation;
   }
 
+  // GET /api/calculations?lead_id=:id
+  async findByLeadId(leadId) {
+    return this.calculationRepository.findByLeadId(leadId);
+  }
+
   // POST /api/calculations/
   async calculateAndSave(dto) {
     const { facility_size_mw, utilization_percentage, cooling_type } = dto;
