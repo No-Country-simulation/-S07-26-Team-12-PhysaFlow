@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
-
 import { screenSize } from "../components/hooks/screenSize";
 import PageConainer from "../components/PageContainer";
 import Spacing from "../components/spacing/Spacing";
 import EmailCaptureModal from "../components/EmailCaptureModal";
 import RoundedButton from "../components/reusableComponents/RoundedButton";
 import { formatAmount } from "../components/hooks/formatAmount";
+import Loader from "../components/reusableComponents/Loader";
+import { getCalculation } from "../services/calculatorService";
 
 export const mockCalculationResult = {
-  facilitySize: 666,
-  utilizationPercent: 100,
+  facilitySize: 44,
+  utilizationPercent: 73,
   cooling: ["air", "immersion"],
   strandedPercent: 0.052890003,
   strandedMw: 5,
@@ -31,22 +32,26 @@ const mapResultData = (data) => ({
 });
 
 export default function BasicResult() {
-  const { isMobile } = screenSize();
+  const { isMobile, isTablet } = screenSize();
   const location = useLocation();
   const { id } = useParams();
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [calculationResult, setCalculationResult] = useState(
     location.state ?? null,
   );
+  const [isLoading, setIsLoading] = useState(!location.state);
 
   useEffect(() => {
     if (calculationResult || !id) return;
     const fetchCalculation = async () => {
       try {
+        setIsLoading(true);
         const data = await getCalculation(id);
         setCalculationResult(data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -55,7 +60,7 @@ export default function BasicResult() {
 
   const dataInfo = calculationResult?.data
     ? mapResultData(calculationResult.data)
-    : mockCalculationResult;
+    : null;
 
   const handleShare = async () => {
     const resultUrl = `${window.location.origin}/result/${dataInfo.id}`;
@@ -67,7 +72,7 @@ export default function BasicResult() {
     };
 
     try {
-      if (navigator.share) {
+      if (navigator.share && (isMobile || isTablet)) {
         await navigator.share(shareData);
       } else {
         await navigator.clipboard.writeText(resultUrl);
@@ -78,6 +83,23 @@ export default function BasicResult() {
       console.error("Error sharing:", error);
     }
   };
+
+  if (isLoading) {
+    return <Loader size="lg" />;
+  }
+
+  if (!dataInfo || Response == 400) {
+    return (
+      <PageConainer>
+        <div className="flex flex-col justfy-center items-center">
+        <h1 className="display-hero">No se encontró el resultado</h1>
+        <Link to="/form">
+          <RoundedButton text="Calcular mi capacidad" color="gold" />
+        </Link>
+        </div>
+      </ PageConainer>
+    );
+  }
 
   return (
     <PageConainer>
@@ -97,9 +119,7 @@ export default function BasicResult() {
             <h1 className="text-center display-data-big">
               {Math.round(dataInfo.strandedPercent * 100)}%
             </h1>
-            <p className="text-center data-small-green">
-              CAPACIDAD ESTANCADA
-            </p>
+            <p className="text-center data-small-green">CAPACIDAD ESTANCADA</p>
           </div>
 
           <div className="flex flex-col items-center justify-center p-4">
@@ -118,8 +138,7 @@ export default function BasicResult() {
           </h2>
 
           <h1 className="result-amount p-2 text-center text-white">
-            {formatAmount(dataInfo.minLoss)} -{" "}
-            {formatAmount(dataInfo.maxLoss)}
+            {formatAmount(dataInfo.minLoss)} - {formatAmount(dataInfo.maxLoss)}
           </h1>
         </div>
 
@@ -165,9 +184,7 @@ export default function BasicResult() {
       </div>
 
       {isEmailModalOpen && (
-        <EmailCaptureModal
-          onClose={() => setIsEmailModalOpen(false)}
-        />
+        <EmailCaptureModal onClose={() => setIsEmailModalOpen(false)} />
       )}
     </PageConainer>
   );
