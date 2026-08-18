@@ -159,6 +159,6 @@ router.get("/:id", catchAsync(controller.findById));
 router.post("/calculate", catchAsync(controller.create));
 
 // router.put("/:id");
-// router.delete("/:id");
+router.delete("/:id", catchAsync(controller.delete));
 
 export default router;
