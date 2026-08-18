@@ -54,6 +54,16 @@ class CalculationService {
       formula_version: "v1.0.1",
     });
   }
+
+  async delete(id) {
+  const calculation = await this.calculationRepository.delete(id);
+
+  if (!calculation) {
+    throw new AppError('Cálculo no encontrado para este usuario', 404);
+  }
+
+  return true;
+};
 }
 
 export default CalculationService;
