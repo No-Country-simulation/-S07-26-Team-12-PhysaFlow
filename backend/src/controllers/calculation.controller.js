@@ -8,6 +8,7 @@ class CalculationController {
     this.create = this.create.bind(this);
     this.findById = this.findById.bind(this);
     this.findByLeadId = this.findByLeadId.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   async findByLeadId(req, res) {
@@ -41,6 +42,16 @@ class CalculationController {
 
     res.status(201).json({ success: true, data: calculation });
   }
+
+  async delete(req, res){
+
+    const { id } = req.params;
+  
+    const result = await this.calculationService.delete(id);
+  
+    res.status(201).json({ success: true, message: 'Cálculo eliminado correctamente'});
+  }
+
 }
 
 export default CalculationController;
