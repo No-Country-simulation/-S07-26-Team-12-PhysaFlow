@@ -1,6 +1,6 @@
 import Lead from "./Lead.model.js";
 import SharedResult from "./SharedResult.model.js";
-import Calculation from "./calculation.model.js";
+import Calculation from "./Calculation.model.js";
 
 /*
 Lead (1)

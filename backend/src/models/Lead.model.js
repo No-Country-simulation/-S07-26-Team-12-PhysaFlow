@@ -38,7 +38,7 @@ const Lead = sequelize.define(
   {
     tableName: "leads",
     timestamps: true,
-  }
+  },
 );
 
 export default Lead;

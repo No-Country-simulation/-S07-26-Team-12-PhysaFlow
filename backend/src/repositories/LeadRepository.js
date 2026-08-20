@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Lead from "../models/Lead.model.js";
 
 class LeadRepository {
@@ -38,7 +39,7 @@ class LeadRepository {
 
   // buscar lead por email
   async findByEmail(email) {
-    return Lead.findOne({ where: { email } });
+    return Lead.findOne({ where: { email: { [Op.iLike]: email } } });
   }
 }
 
