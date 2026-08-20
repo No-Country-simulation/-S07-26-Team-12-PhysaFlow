@@ -185,7 +185,10 @@ export default function BasicResult() {
       </div>
 
       {isEmailModalOpen && (
-        <EmailCaptureModal onClose={() => setIsEmailModalOpen(false)} />
+        <EmailCaptureModal
+          calculationId={dataInfo.id}
+          onClose={() => setIsEmailModalOpen(false)}
+        />
       )}
     </PageConainer>
   );

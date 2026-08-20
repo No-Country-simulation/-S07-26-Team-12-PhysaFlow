@@ -1,10 +1,46 @@
+import { Link, useParams } from "react-router-dom";
 import PageConainer from "../components/PageContainer";
 import { screenSize } from "../components/hooks/screenSize";
+import useFullResult from "../components/hooks/useFullResult";
 import ScenarioCard from "../components/scenarios/ScenarioCard";
+import Loader from "../components/reusableComponents/Loader";
+import { mapCalculationToScenario } from "../components/scenarios/fullResultMapper";
 import { fullResultScenarios } from "../data/fullResultMock";
 
 export default function FullResult() {
   const { isMobile } = screenSize();
+  const { id } = useParams();
+  const {
+    calculation,
+    error,
+    isDownloading,
+    isLoading,
+    handleDownloadPdf,
+  } = useFullResult(id);
+
+  if (isLoading) return <Loader size="lg" />;
+
+  if (error || !calculation) {
+    return (
+      <PageConainer>
+        <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 text-center">
+          <h1 className="font-title text-3xl text-green-darker">
+            {error || "No se encontró el resultado"}
+          </h1>
+          <Link
+            to="/form"
+            className="rounded-full bg-gold-dark px-5 py-3 font-semibold text-green-darker"
+          >
+            Volver a calcular
+          </Link>
+        </div>
+      </PageConainer>
+    );
+  }
+
+  const actualScenario = mapCalculationToScenario(calculation);
+  const optimizedScenario = fullResultScenarios[1];
+  const downloadLabel = isDownloading ? "Descargando..." : "Exportar PDF";
 
   return (
     <PageConainer>
@@ -27,8 +63,11 @@ export default function FullResult() {
           </div>
           {!isMobile && (
             <div className="flex shrink-0 gap-2">
-              <button className="rounded-full border border-green-light px-4 py-2 text-[10px] text-green-darker">
-                Exportar PDF
+              <button
+                onClick={handleDownloadPdf}
+                className="rounded-full border border-green-light px-4 py-2 text-[10px] text-green-darker"
+              >
+                {downloadLabel}
               </button>
               <button className="rounded-full bg-green-darker px-4 py-2 text-[10px] text-white">
                 + Agregar escenario
@@ -46,7 +85,8 @@ export default function FullResult() {
         ) : (
           <div className="mt-9 flex flex-wrap gap-2 font-data text-[10px]">
             <span className="rounded-full bg-green-dark px-4 py-2 text-white">
-              Actual&nbsp; · &nbsp;40 MW&nbsp; · &nbsp;68% util
+              Actual&nbsp; · &nbsp;{calculation.facility_size_mw} MW&nbsp; · &nbsp;
+              {calculation.utilization_percentage}% util
             </span>
             <span className="rounded-full border border-green-lightest px-4 py-2 text-green-dark">
               Optimizado&nbsp; · &nbsp;40 MW&nbsp; · &nbsp;82% util
@@ -58,10 +98,8 @@ export default function FullResult() {
         )}
 
         <section className="mt-5 flex flex-col gap-4 sm:mt-9 sm:flex-row">
-          <ScenarioCard scenario={fullResultScenarios[0]} />
-          {!isMobile && (
-            <ScenarioCard scenario={fullResultScenarios[1]} optimized />
-          )}
+          <ScenarioCard scenario={actualScenario} />
+          {!isMobile && <ScenarioCard scenario={optimizedScenario} optimized />}
           {!isMobile && (
             <button className="flex min-h-[268px] w-full shrink-0 flex-col items-center justify-center rounded-2xl border border-dashed border-green-light bg-transparent text-[10px] text-green-darker sm:w-[134px]">
               <span className="font-title text-2xl">+</span>
@@ -75,8 +113,11 @@ export default function FullResult() {
             <button className="w-full rounded-full bg-green-dark px-4 py-3 text-[12px] font-semibold text-white">
               + Agregar escenario
             </button>
-            <button className="w-full rounded-full border border-green-light px-4 py-3 text-[12px] text-green-darker">
-              Exportar PDF
+            <button
+              onClick={handleDownloadPdf}
+              className="w-full rounded-full border border-green-light px-4 py-3 text-[12px] text-green-darker"
+            >
+              {downloadLabel}
             </button>
           </div>
         ) : (
@@ -89,8 +130,11 @@ export default function FullResult() {
               <button className="rounded-full border border-white px-4 py-2 text-[10px]">
                 Compartir con un colega
               </button>
-              <button className="rounded-full bg-gold-dark px-4 py-2 text-[10px] text-green-darker">
-                Descargar comparación (PDF)
+              <button
+                onClick={handleDownloadPdf}
+                className="rounded-full bg-gold-dark px-4 py-2 text-[10px] text-green-darker"
+              >
+                Descargar PDF
               </button>
             </div>
           </div>
