@@ -120,7 +120,7 @@ export default function CalculatorForm() {
             value={usage}
             onChange={(e) => setUsage(e.target.value)}
             style={{
-              background: `linear-gradient(to right,#1f5c45 ${usage}%,#d8e2d8 ${usage}%)`,
+              background: !usage ? "#d8d8d8" : ` linear-gradient(to right,#1f5c45 ${usage}%,#d8e2d8 ${usage}%)`,
             }}
           />
           {errors.usage && (
