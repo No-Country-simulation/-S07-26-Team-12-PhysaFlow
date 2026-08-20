@@ -43,6 +43,15 @@
 
 @layer components {
 
+    .scenario-carousel {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .scenario-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
     /*text formatting*/
 
     .display-hero{

@@ -2,15 +2,17 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { screenSize } from "./hooks/screenSize";
 import Loader from "./reusableComponents/Loader";
+import { registerLead } from "../services/calculatorService";
+import { LEAD_EMAIL_STORAGE_KEY } from "../constants/storage";
 
-export default function EmailCaptureModal({ onClose }) {
+export default function EmailCaptureModal({ onClose, calculationId }) {
   const { isMobile } = screenSize();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     if (isLoading) return;
@@ -30,12 +32,17 @@ export default function EmailCaptureModal({ onClose }) {
     setEmailError("");
     setIsLoading(true);
 
-    // Simula la respuesta del backend hasta que exista el endpoint real.
-    setTimeout(() => {
-      navigate("/full-result", {
+    try {
+      await registerLead(normalizedEmail, calculationId);
+      sessionStorage.setItem(LEAD_EMAIL_STORAGE_KEY, normalizedEmail);
+      navigate(`/full-result/${calculationId}`, {
         state: { showUnlockSuccess: true },
       });
-    }, 900);
+    } catch (error) {
+      console.error("Error registering lead:", error);
+      setEmailError("No pudimos desbloquear el análisis. Intentá nuevamente.");
+      setIsLoading(false);
+    }
   }
 
   return (

@@ -16,7 +16,7 @@ function App() {
         <Route path="/" element={<Layout />} />
         <Route path="/form" element={<CalculatorFormPage />} />
         <Route path='/result/:id' element={<BasicResult/>}/>
-        <Route path="/full-result" element={<FullResult/>} />
+        <Route path="/full-result/:id" element={<FullResult/>} />
         <Route path="*" element={<NotFound/>} />
       </Routes>
     </>

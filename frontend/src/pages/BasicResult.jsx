@@ -31,6 +31,7 @@ const mapResultData = (data) => ({
   id: data.id,
 });
 
+
 export default function BasicResult() {
   const { isMobile, isTablet } = screenSize();
   const location = useLocation();
@@ -184,7 +185,10 @@ export default function BasicResult() {
       </div>
 
       {isEmailModalOpen && (
-        <EmailCaptureModal onClose={() => setIsEmailModalOpen(false)} />
+        <EmailCaptureModal
+          calculationId={dataInfo.id}
+          onClose={() => setIsEmailModalOpen(false)}
+        />
       )}
     </PageConainer>
   );
