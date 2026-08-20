@@ -12,6 +12,7 @@ export default function ScenarioCard({
   onPointerMove,
   onPointerUp,
   scenarioIndex,
+  className = "",
 }) {
   return (
     <article
@@ -26,7 +27,7 @@ export default function ScenarioCard({
       data-scenario-index={scenarioIndex}
       className={`flex min-h-[268px] flex-1 flex-col rounded-2xl border bg-white p-5 sm:p-6 ${
         optimized ? "border-gold-dark" : "border-green-lightest"
-      } ${draggable ? "touch-none cursor-grab transition hover:-translate-y-1 hover:shadow-lg active:cursor-grabbing active:scale-[.99]" : ""}`}
+      } ${draggable ? "touch-none cursor-grab transition hover:-translate-y-1 hover:shadow-lg active:cursor-grabbing active:scale-[.99]" : ""} ${className}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -58,7 +59,7 @@ export default function ScenarioCard({
           <p className="font-data text-[8px] uppercase text-green-dark">
             Pérdida anual est.
           </p>
-          <p className="mt-1 whitespace-nowrap font-data text-[23px] font-semibold leading-none text-green-darker sm:text-[25px]">
+          <p className="mt-1 break-words font-data text-[19px] font-semibold leading-tight text-green-darker sm:whitespace-nowrap sm:text-[25px] sm:leading-none">
             {scenario.loss}
           </p>
           <p className="mt-2 font-data text-[9px] text-green-dark">

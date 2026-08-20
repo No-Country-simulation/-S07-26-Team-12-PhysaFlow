@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import PageConainer from "../components/PageContainer";
 import { screenSize } from "../components/hooks/screenSize";
@@ -23,6 +23,8 @@ export default function FullResult() {
   const [scenarioOrder, setScenarioOrder] = useState([]);
   const [isScenarioModalOpen, setIsScenarioModalOpen] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState(null);
+  const [activeScenarioIndex, setActiveScenarioIndex] = useState(0);
+  const mobileCarouselRef = useRef(null);
 
   const actualScenario = calculation
     ? mapCalculationToScenario(calculation)
@@ -58,6 +60,24 @@ export default function FullResult() {
       return reordered;
     });
     setDraggedIndex(null);
+  };
+
+  const handleMobileScroll = (event) => {
+    const cardWidth = event.currentTarget.clientWidth;
+    if (!cardWidth) return;
+
+    setActiveScenarioIndex(
+      Math.min(
+        scenarios.length - 1,
+        Math.max(0, Math.round(event.currentTarget.scrollLeft / cardWidth)),
+      ),
+    );
+  };
+
+  const goToMobileScenario = (index) => {
+    const card = mobileCarouselRef.current?.children[index];
+    card?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+    setActiveScenarioIndex(index);
   };
 
   const handlePointerMove = (event) => {
@@ -139,9 +159,20 @@ export default function FullResult() {
 
         {isMobile ? (
           <div className="mt-5 flex gap-1.5" aria-label="Escenarios disponibles">
-            <span className="h-1.5 w-4 rounded-full bg-green-dark" />
-            <span className="h-1.5 w-1.5 rounded-full bg-green-lightest" />
-            <span className="h-1.5 w-1.5 rounded-full bg-green-lightest" />
+            {scenarios.map((scenario, index) => (
+              <button
+                key={scenario.id}
+                type="button"
+                aria-label={`Ver ${scenario.name}`}
+                aria-current={activeScenarioIndex === index}
+                onClick={() => goToMobileScenario(index)}
+                className={`h-1.5 rounded-full transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-dark ${
+                  activeScenarioIndex === index
+                    ? "w-4 bg-green-dark"
+                    : "w-1.5 bg-green-lightest hover:bg-green-light"
+                }`}
+              />
+            ))}
           </div>
         ) : (
           <div className="mt-9 flex flex-wrap gap-2 font-data text-[10px]">
@@ -160,26 +191,42 @@ export default function FullResult() {
           </div>
         )}
 
-        <section className="mt-5 flex flex-col gap-4 sm:mt-9 sm:flex-row sm:flex-wrap">
-          {scenarios.map((scenario, index) => (
-            <ScenarioCard
-              key={`${scenario.name}-${index}`}
-              scenario={scenario}
-              optimized={scenario.name === "Optimizado"}
-              draggable
-              scenarioIndex={index}
-              onDragStart={() => setDraggedIndex(index)}
-              onDragOver={(event) => event.preventDefault()}
-              onDrop={() => handleDrop(index)}
-              onDragEnd={() => setDraggedIndex(null)}
-              onPointerDown={(event) => {
-                if (event.pointerType === "touch") setDraggedIndex(index);
-              }}
-              onPointerMove={handlePointerMove}
-              onPointerUp={() => setDraggedIndex(null)}
-            />
-          ))}
-          {!isMobile && (
+        {isMobile ? (
+          <section
+            ref={mobileCarouselRef}
+            onScroll={handleMobileScroll}
+            className="scenario-carousel mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain"
+            aria-label="Carrusel de escenarios"
+          >
+            {scenarios.map((scenario) => (
+              <ScenarioCard
+                key={scenario.id}
+                scenario={scenario}
+                optimized={scenario.name === "Optimizado"}
+                className="min-w-full snap-start"
+              />
+            ))}
+          </section>
+        ) : (
+          <section className="mt-5 flex flex-col gap-4 sm:mt-9 sm:flex-row sm:flex-wrap">
+            {scenarios.map((scenario, index) => (
+              <ScenarioCard
+                key={scenario.id}
+                scenario={scenario}
+                optimized={scenario.name === "Optimizado"}
+                draggable
+                scenarioIndex={index}
+                onDragStart={() => setDraggedIndex(index)}
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={() => handleDrop(index)}
+                onDragEnd={() => setDraggedIndex(null)}
+                onPointerDown={(event) => {
+                  if (event.pointerType === "touch") setDraggedIndex(index);
+                }}
+                onPointerMove={handlePointerMove}
+                onPointerUp={() => setDraggedIndex(null)}
+              />
+            ))}
             <button
               onClick={openScenarioModal}
               className="flex min-h-[268px] w-full shrink-0 flex-col items-center justify-center rounded-2xl border border-dashed border-green-light bg-transparent text-[10px] text-green-darker transition hover:-translate-y-1 hover:bg-green-lightest/40 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-dark active:scale-[.98] sm:w-[134px]"
@@ -187,9 +234,8 @@ export default function FullResult() {
               <span className="font-title text-2xl">+</span>
               <span>Agregar<br />escenario</span>
             </button>
-          )}
-        </section>
-
+          </section>
+        )}
         {isMobile ? (
           <div className="mt-5 space-y-2">
             <button
