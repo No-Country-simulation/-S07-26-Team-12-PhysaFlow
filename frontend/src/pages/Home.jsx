@@ -27,11 +27,11 @@ export default function Home() {
             </div>
             </div>
             {(isMobile || isTablet) && <Spacing/>}
-            <div className={`${(!isMobile && !isTablet) ? "w-1/2":"w-full"} flex items-center justify-center `}>
+            <div className={`${(!isMobile && !isTablet) ? "w-1/2":"w-full"} flex items-center justify-center  `}>
                 <img 
-                src="https://img.magnific.com/foto-gratis/centro-datos-moderno-que-brinda-servicios-nube-lo-que-permite-empresas-acceder-recursos-informaticos-almacenamiento-demanda-traves-internet-animacion-renderizado-3d-infraestructura-sala-servidores_482257-65963.jpg?semt=ais_test_b&w=740&q=80" 
+                src="https://res.cloudinary.com/duaoa6n1z/image/upload/v1787197834/Nocountry/Screenshot_2026-08-19_at_10.48.56_p.m._nypqsd.png" 
                 alt="datacenter"
-                className="w-full h-auto object-contain"
+                className="w-3/4 h-auto object-contain border rounded"
                 />
             </div>
           </div>
