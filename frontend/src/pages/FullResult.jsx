@@ -255,8 +255,8 @@ export default function FullResult() {
         ) : (
           <div className="mt-9 flex items-center justify-between gap-4 rounded-2xl bg-green-darker px-5 py-4 text-white sm:px-6">
             <p className="font-title text-[14px] font-bold text-gold-dark">
-              Mejor escenario: Optimizado — ahorra ~$1.1M/año y recupera 12 pts de
-              capacidad estancada.
+              Mejor escenario: Optimizado — recomendado para mejorar la capacidad
+              estancada.
             </p>
             <div className="flex shrink-0 gap-2">
               <button className="rounded-full border border-white px-4 py-2 text-[10px] transition hover:-translate-y-0.5 hover:bg-white hover:text-green-darker hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:translate-y-0 active:scale-[.98]">
