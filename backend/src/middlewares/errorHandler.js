@@ -11,6 +11,11 @@ const errorHandler = (err, req, res, next) => {
     err.statusCode = 409;
     err.message = err.errors.map((e) => e.message).join(", ");
   }
+  if (err.name === "SequelizeDatabaseError" && err.parent?.code === "22P02") {
+    err.statusCode = 400;
+    err.isOperational = true;
+    err.message = "El valor proporcionado no tiene un formato válido";
+  }
 
   // production: respuesta limpia
   if (process.env.NODE_ENV === "production") {

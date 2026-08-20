@@ -1,16 +1,18 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
-
+import { useEffect, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
+import axios from "axios";
 import { screenSize } from "../components/hooks/screenSize";
 import PageConainer from "../components/PageContainer";
 import Spacing from "../components/spacing/Spacing";
 import EmailCaptureModal from "../components/EmailCaptureModal";
 import RoundedButton from "../components/reusableComponents/RoundedButton";
 import { formatAmount } from "../components/hooks/formatAmount";
+import Loader from "../components/reusableComponents/Loader";
+import { getCalculation } from "../services/calculatorService";
 
 export const mockCalculationResult = {
-  facilitySize: 666,
-  utilizationPercent: 100,
+  facilitySize: 44,
+  utilizationPercent: 73,
   cooling: ["air", "immersion"],
   strandedPercent: 0.052890003,
   strandedMw: 5,
@@ -19,25 +21,86 @@ export const mockCalculationResult = {
 };
 
 const mapResultData = (data) => ({
-  facilitySize: data?.facility_size_mw ?? 0,
-  utilizationPercent: data?.utilization_percentage ?? 0,
-  cooling: data?.cooling_type ?? [],
-  strandedPercent: data?.stranded_capacity_percent ?? 0,
-  strandedMw: data?.stranded_capacity_mw ?? 0,
-  minLoss: data?.annual_loss_min ?? 0,
-  maxLoss: data?.annual_loss_max ?? 0,
+  facilitySize: data.facility_size_mw,
+  utilizationPercent: data.utilization_percentage,
+  cooling: data.cooling_type,
+  strandedPercent: data.stranded_capacity_percent,
+  strandedMw: data.stranded_capacity_mw,
+  minLoss: data.annual_loss_min,
+  maxLoss: data.annual_loss_max,
+  id: data.id,
 });
 
-export default function BasicResult() {
-  const { isMobile } = screenSize();
-  const location = useLocation();
 
+export default function BasicResult() {
+  const { isMobile, isTablet } = screenSize();
+  const location = useLocation();
+  const { id } = useParams();
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
-  const [calculationResult] = useState(location.state ?? null);
+  const [calculationResult, setCalculationResult] = useState(
+    location.state ?? null,
+  );
+  const [isLoading, setIsLoading] = useState(!location.state);
+
+  useEffect(() => {
+    if (calculationResult || !id) return;
+    const fetchCalculation = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getCalculation(id);
+        setCalculationResult(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCalculation();
+  }, [id, calculationResult]);
 
   const dataInfo = calculationResult?.data
     ? mapResultData(calculationResult.data)
-    : mockCalculationResult;
+    : null;
+
+  const handleShare = async () => {
+    const resultUrl = `${window.location.origin}/result/${dataInfo.id}`;
+
+    const shareData = {
+      title: "PhysaFlow Calculation Result",
+      text: "View my PhysaFlow calculation result",
+      url: resultUrl,
+    };
+
+    try {
+      if (navigator.share && (isMobile || isTablet)) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(resultUrl);
+
+        alert("Link copied to clipboard");
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
+
+  if (isLoading) {
+    return <Loader size="lg" />;
+  }
+
+  if (!dataInfo || Response == 400) {
+    return (
+      <PageConainer>
+        <div className="flex flex-col justfy-center items-center">
+        <h1 className="display-hero">No se encontró el resultado</h1>
+        <Link to="/form">
+          <RoundedButton text="Calcular mi capacidad" color="gold" />
+        </Link>
+        </div>
+      </ PageConainer>
+    );
+  }
 
   return (
     <PageConainer>
@@ -57,9 +120,7 @@ export default function BasicResult() {
             <h1 className="text-center display-data-big">
               {Math.round(dataInfo.strandedPercent * 100)}%
             </h1>
-            <p className="text-center data-small-green">
-              CAPACIDAD ESTANCADA
-            </p>
+            <p className="text-center data-small-green">CAPACIDAD ESTANCADA</p>
           </div>
 
           <div className="flex flex-col items-center justify-center p-4">
@@ -78,8 +139,7 @@ export default function BasicResult() {
           </h2>
 
           <h1 className="result-amount p-2 text-center text-white">
-            {formatAmount(dataInfo.minLoss)} -{" "}
-            {formatAmount(dataInfo.maxLoss)}
+            {formatAmount(dataInfo.minLoss)} - {formatAmount(dataInfo.maxLoss)}
           </h1>
         </div>
 
@@ -91,18 +151,25 @@ export default function BasicResult() {
 
         <Spacing size="md" />
 
-        <div className={`flex ${isMobile ? "flex-col" : "flex-row"}`}>
-          <RoundedButton
-            text="Ver breakdown completo + comparar escenarios"
-            color="gold"
-            onClick={() => setIsEmailModalOpen(true)}
-          />
+        {location.state ? (
+          <div className={`flex ${isMobile ? "flex-col" : "flex-row"}`}>
+            <RoundedButton
+              text="Ver breakdown completo + comparar escenarios"
+              color="gold"
+              onClick={() => setIsEmailModalOpen(true)}
+            />
 
-          <RoundedButton
-            text="Compartir con un colega"
-            color="border"
-          />
-        </div>
+            <RoundedButton
+              onClick={handleShare}
+              text="Compartir con un colega"
+              color="border"
+            />
+          </div>
+        ) : (
+          <Link to="/form">
+            <RoundedButton text="Calcular mi capacidad" color="gold" />
+          </Link>
+        )}
 
         <Spacing size="md" />
 
@@ -118,9 +185,7 @@ export default function BasicResult() {
       </div>
 
       {isEmailModalOpen && (
-        <EmailCaptureModal
-          onClose={() => setIsEmailModalOpen(false)}
-        />
+        <EmailCaptureModal onClose={() => setIsEmailModalOpen(false)} />
       )}
     </PageConainer>
   );

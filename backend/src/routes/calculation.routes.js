@@ -11,8 +11,79 @@ const controller = new CalculationController(service);
 
 const router = Router();
 
-// router.get("/");
-// router.get("/:id");
+/**
+ * @swagger
+ * /api/calculations:
+ *   get:
+ *     tags: [Calculation]
+ *     summary: Obtener cálculos por lead_id
+ *     description: Recupera todos los cálculos asociados a un lead mediante su UUID
+ *     parameters:
+ *       - in: query
+ *         name: lead_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: UUID del lead
+ *         example: d290f1ee-6c54-4b01-90e6-d701748f0851
+ *     responses:
+ *       200:
+ *         description: Lista de cálculos del lead
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Calculation'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get("/", catchAsync(controller.findByLeadId));
+
+/**
+ * @swagger
+ * /api/calculations/{id}:
+ *   get:
+ *     tags: [Calculation]
+ *     summary: Obtener un cálculo por ID
+ *     description: Recupera un cálculo de capacidad varada existente mediante su UUID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: UUID del cálculo
+ *         example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+ *     responses:
+ *       200:
+ *         description: Cálculo encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/Calculation'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get("/:id", catchAsync(controller.findById));
 
 /**
  * @swagger
