@@ -1,6 +1,6 @@
 export default function PageConainer({children}){
     return (
-        <div className="py-16 min-h-screen w-full flex justify-center bg-page-background">
+        <div className="flex min-h-screen w-full justify-center overflow-x-hidden bg-page-background py-16">
             <div className="container p-4">{children}</div>
         </div>
     )

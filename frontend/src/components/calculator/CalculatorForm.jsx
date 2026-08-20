@@ -3,7 +3,6 @@ import RectangleButton from "../reusableComponents/RectangleButton";
 import Spacing from "../spacing/Spacing";
 import CalculatorInput from "./calculatorComponents/CalculatorInput";
 import { calculateCapacity } from "../../services/calculatorService";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Loader from "../reusableComponents/Loader";
 
@@ -74,20 +73,19 @@ export default function CalculatorForm() {
       setApiError("");
       const resultRes = await calculateCapacity(data);
       navigate(`/result/${resultRes.data.id}`, { state: resultRes });
-      console.log("form info", resultRes);
+      setSize("");
+      setUsage("");
+      setCoolingOption("");
     } catch (error) {
       console.log("error:", error);
       setApiError("No pudimos calcular la capacidad. Intenta nuevamente.");
     } finally {
       setLoading(false);
-      setSize("");
-      setUsage("");
-      setCoolingOption("");
     }
   };
 
   return (
-    <div className="flex flex-col w-full max-w-xl justify-center border border-green-lightest bg-white p-4 rounded-lg">
+    <div className="flex w-full max-w-xl flex-col justify-center rounded-2xl border border-green-lightest bg-white p-4 sm:p-6">
       {loading ? <Loader/> : 
       <>
       <Spacing size="xs" />
@@ -104,11 +102,26 @@ export default function CalculatorForm() {
         />
         <Spacing size="lg" />
         <div>
-          <div className="flex justify-between">
-            <label className="data-small-green">
+          <div className="flex items-center justify-between gap-4">
+            <label htmlFor="utilization_percentage" className="data-small-green">
               UTILIZACION APROXIMADA (%)
             </label>
-            <h4>{usage}%</h4>
+            <div className="flex items-center gap-1">
+              <input
+                id="utilization_percentage"
+                name="utilization_percentage_number"
+                type="number"
+                min="0"
+                max="100"
+                step="0.1"
+                value={usage}
+                onChange={(e) => setUsage(e.target.value)}
+                placeholder="0"
+                aria-label="Utilización aproximada en porcentaje"
+                className="w-14 border-b border-green-light bg-transparent text-right font-data text-sm text-green-darker outline-none transition focus:border-green-dark"
+              />
+              <span className="font-data text-sm text-green-darker">%</span>
+            </div>
           </div>
 
           <input
@@ -117,10 +130,10 @@ export default function CalculatorForm() {
             type="range"
             min="0"
             max="100"
-            value={usage}
+            value={usage === "" ? 0 : usage}
             onChange={(e) => setUsage(e.target.value)}
             style={{
-              background: !usage ? "#d8d8d8" : ` linear-gradient(to right,#1f5c45 ${usage}%,#d8e2d8 ${usage}%)`,
+              background: `linear-gradient(to right,#1f5c45 ${usage || 0}%,#d8e2d8 ${usage || 0}%)`,
             }}
           />
           {errors.usage && (
@@ -166,13 +179,19 @@ export default function CalculatorForm() {
           )}
         </div>
 
+        {apiError && (
+          <p className="mt-4 text-center text-sm text-red-600" role="alert">
+            {apiError}
+          </p>
+        )}
+
         <Spacing size="lg" />
         <div className="flex justify-center">
           <RectangleButton
             color="gold"
             text="Calcular mi capacidad estancada →"
             type="submit"
-            onClick={handleSubmit}
+            className="w-full max-w-none sm:max-w-xs"
           />
         </div>
       </form>
