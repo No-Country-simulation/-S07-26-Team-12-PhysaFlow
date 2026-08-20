@@ -4,10 +4,14 @@ import catchAsync from "../utils/catchAsync.js";
 import CalculationRepository from "../repositories/CalculationRepository.js";
 import CalculationService from "../services/calculation.service.js";
 import CalculationController from "../controllers/calculation.controller.js";
+import CalculationPdfService from "../services/calculationPdf.service.js";
+import CalculationPdfController from "../controllers/calculationPdf.controller.js";
 
 const repository = new CalculationRepository();
 const service = new CalculationService({ calculationRepository: repository });
 const controller = new CalculationController(service);
+const pdfService = new CalculationPdfService({ calculationRepository: repository });
+const pdfController = new CalculationPdfController(pdfService);
 
 const router = Router();
 
@@ -158,7 +162,51 @@ router.get("/:id", catchAsync(controller.findById));
  */
 router.post("/calculate", catchAsync(controller.create));
 
+/**
+ * @swagger
+ * /api/calculations/{id}/pdf:
+ *   get:
+ *     tags: [Calculation]
+ *     summary: Generar y descargar PDF de un cálculo
+ *     description: |
+ *       Genera un PDF profesional con los datos de un cálculo.
+ *       Si se proporciona compare_with, genera un PDF comparativo entre ambos cálculos.
+ *       Ambos cálculos deben pertenecer al mismo lead para comparar.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: UUID del cálculo
+ *       - in: query
+ *         name: compare_with
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: UUID del segundo cálculo para comparación
+ *     responses:
+ *       200:
+ *         description: Archivo PDF generado
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       409:
+ *         description: Conflicto - cálculos de diferentes leads
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get("/:id/pdf", catchAsync(pdfController.generate));
+
 // router.put("/:id");
-// router.delete("/:id");
+router.delete("/:id", catchAsync(controller.delete));
 
 export default router;
