@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import PageConainer from "../components/PageContainer";
 import { screenSize } from "../components/hooks/screenSize";
 import useFullResult from "../components/hooks/useFullResult";
 import ScenarioCard from "../components/scenarios/ScenarioCard";
+import NewScenarioModal from "../components/scenarios/NewScenarioModal";
 import Loader from "../components/reusableComponents/Loader";
 import { mapCalculationToScenario } from "../components/scenarios/fullResultMapper";
 import { fullResultScenarios } from "../data/fullResultMock";
@@ -17,6 +19,63 @@ export default function FullResult() {
     isLoading,
     handleDownloadPdf,
   } = useFullResult(id);
+  const [newScenarios, setNewScenarios] = useState([]);
+  const [scenarioOrder, setScenarioOrder] = useState([]);
+  const [isScenarioModalOpen, setIsScenarioModalOpen] = useState(false);
+  const [draggedIndex, setDraggedIndex] = useState(null);
+
+  const actualScenario = calculation
+    ? mapCalculationToScenario(calculation)
+    : null;
+  const scenarioCatalog = actualScenario
+    ? [actualScenario, fullResultScenarios[1], ...newScenarios]
+    : [];
+  const scenarios = scenarioOrder.length
+    ? scenarioOrder
+        .map((scenarioId) =>
+          scenarioCatalog.find((scenario) => scenario.id === scenarioId),
+        )
+        .filter(Boolean)
+    : scenarioCatalog;
+
+  const openScenarioModal = () => setIsScenarioModalOpen(true);
+
+  const handleScenarioCreated = (scenario) => {
+    setNewScenarios((currentScenarios) => [...currentScenarios, scenario]);
+    setScenarioOrder((currentOrder) =>
+      currentOrder.length ? [...currentOrder, scenario.id] : currentOrder,
+    );
+    setIsScenarioModalOpen(false);
+  };
+
+  const handleDrop = (dropIndex) => {
+    if (draggedIndex === null || draggedIndex === dropIndex) return;
+
+    setScenarioOrder(() => {
+      const reordered = scenarios.map((scenario) => scenario.id);
+      const [draggedScenario] = reordered.splice(draggedIndex, 1);
+      reordered.splice(dropIndex, 0, draggedScenario);
+      return reordered;
+    });
+    setDraggedIndex(null);
+  };
+
+  const handlePointerMove = (event) => {
+    if (event.pointerType !== "touch" || draggedIndex === null) return;
+
+    const target = document
+      .elementFromPoint(event.clientX, event.clientY)
+      ?.closest("[data-scenario-index]");
+    const dropIndex = Number(target?.dataset.scenarioIndex);
+
+    if (!Number.isInteger(dropIndex) || dropIndex === draggedIndex) return;
+
+    const reordered = scenarios.map((scenario) => scenario.id);
+    const [draggedScenario] = reordered.splice(draggedIndex, 1);
+    reordered.splice(dropIndex, 0, draggedScenario);
+    setScenarioOrder(reordered);
+    setDraggedIndex(dropIndex);
+  };
 
   if (isLoading) return <Loader size="lg" />;
 
@@ -38,8 +97,6 @@ export default function FullResult() {
     );
   }
 
-  const actualScenario = mapCalculationToScenario(calculation);
-  const optimizedScenario = fullResultScenarios[1];
   const downloadLabel = isDownloading ? "Descargando..." : "Exportar PDF";
 
   return (
@@ -65,11 +122,15 @@ export default function FullResult() {
             <div className="flex shrink-0 gap-2">
               <button
                 onClick={handleDownloadPdf}
-                className="rounded-full border border-green-light px-4 py-2 text-[10px] text-green-darker"
+                disabled={isDownloading}
+                className="rounded-full border border-green-light px-4 py-2 text-[10px] text-green-darker transition hover:-translate-y-0.5 hover:bg-green-lightest hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-dark active:translate-y-0 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {downloadLabel}
               </button>
-              <button className="rounded-full bg-green-darker px-4 py-2 text-[10px] text-white">
+              <button
+                onClick={openScenarioModal}
+                className="rounded-full bg-green-darker px-4 py-2 text-[10px] text-white transition hover:-translate-y-0.5 hover:bg-green-dark hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-dark active:translate-y-0 active:scale-[.98]"
+              >
                 + Agregar escenario
               </button>
             </div>
@@ -92,16 +153,37 @@ export default function FullResult() {
               Optimizado&nbsp; · &nbsp;40 MW&nbsp; · &nbsp;82% util
             </span>
             <span className="rounded-full border border-dashed border-green-light px-4 py-2 text-green-dark">
-              + Nuevo escenario
+              {newScenarios.length > 0
+                ? `${newScenarios.length} escenarios nuevos`
+                : "+ Nuevo escenario"}
             </span>
           </div>
         )}
 
-        <section className="mt-5 flex flex-col gap-4 sm:mt-9 sm:flex-row">
-          <ScenarioCard scenario={actualScenario} />
-          {!isMobile && <ScenarioCard scenario={optimizedScenario} optimized />}
+        <section className="mt-5 flex flex-col gap-4 sm:mt-9 sm:flex-row sm:flex-wrap">
+          {scenarios.map((scenario, index) => (
+            <ScenarioCard
+              key={`${scenario.name}-${index}`}
+              scenario={scenario}
+              optimized={scenario.name === "Optimizado"}
+              draggable
+              scenarioIndex={index}
+              onDragStart={() => setDraggedIndex(index)}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={() => handleDrop(index)}
+              onDragEnd={() => setDraggedIndex(null)}
+              onPointerDown={(event) => {
+                if (event.pointerType === "touch") setDraggedIndex(index);
+              }}
+              onPointerMove={handlePointerMove}
+              onPointerUp={() => setDraggedIndex(null)}
+            />
+          ))}
           {!isMobile && (
-            <button className="flex min-h-[268px] w-full shrink-0 flex-col items-center justify-center rounded-2xl border border-dashed border-green-light bg-transparent text-[10px] text-green-darker sm:w-[134px]">
+            <button
+              onClick={openScenarioModal}
+              className="flex min-h-[268px] w-full shrink-0 flex-col items-center justify-center rounded-2xl border border-dashed border-green-light bg-transparent text-[10px] text-green-darker transition hover:-translate-y-1 hover:bg-green-lightest/40 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-dark active:scale-[.98] sm:w-[134px]"
+            >
               <span className="font-title text-2xl">+</span>
               <span>Agregar<br />escenario</span>
             </button>
@@ -110,12 +192,16 @@ export default function FullResult() {
 
         {isMobile ? (
           <div className="mt-5 space-y-2">
-            <button className="w-full rounded-full bg-green-dark px-4 py-3 text-[12px] font-semibold text-white">
+            <button
+              onClick={openScenarioModal}
+              className="w-full rounded-full bg-green-dark px-4 py-3 text-[12px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-green-darker hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-dark active:translate-y-0 active:scale-[.98]"
+            >
               + Agregar escenario
             </button>
             <button
               onClick={handleDownloadPdf}
-              className="w-full rounded-full border border-green-light px-4 py-3 text-[12px] text-green-darker"
+              disabled={isDownloading}
+              className="w-full rounded-full border border-green-light px-4 py-3 text-[12px] text-green-darker transition hover:bg-green-lightest hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-dark active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {downloadLabel}
             </button>
@@ -127,19 +213,27 @@ export default function FullResult() {
               capacidad estancada.
             </p>
             <div className="flex shrink-0 gap-2">
-              <button className="rounded-full border border-white px-4 py-2 text-[10px]">
+              <button className="rounded-full border border-white px-4 py-2 text-[10px] transition hover:-translate-y-0.5 hover:bg-white hover:text-green-darker hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:translate-y-0 active:scale-[.98]">
                 Compartir con un colega
               </button>
               <button
                 onClick={handleDownloadPdf}
-                className="rounded-full bg-gold-dark px-4 py-2 text-[10px] text-green-darker"
+                disabled={isDownloading}
+                className="rounded-full bg-gold-dark px-4 py-2 text-[10px] text-green-darker transition hover:-translate-y-0.5 hover:bg-gold-darker hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-dark active:translate-y-0 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Descargar PDF
+                {downloadLabel}
               </button>
             </div>
           </div>
         )}
       </main>
+      {isScenarioModalOpen && (
+        <NewScenarioModal
+          scenarioNumber={newScenarios.length + 1}
+          onClose={() => setIsScenarioModalOpen(false)}
+          onCreated={handleScenarioCreated}
+        />
+      )}
     </PageConainer>
   );
 }

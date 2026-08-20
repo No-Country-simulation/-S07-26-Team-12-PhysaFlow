@@ -9,6 +9,7 @@ export const fullResultScenarios = [
     bars: [100, 79, 61],
   },
   {
+    id: "optimized-mock",
     name: "Optimizado",
     details: "40 MW · 82% util · Líquido",
     badge: "−12 pts vs Actual",

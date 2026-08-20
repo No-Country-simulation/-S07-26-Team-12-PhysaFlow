@@ -1,11 +1,32 @@
 import ScenarioBars from "./ScenarioBars";
 
-export default function ScenarioCard({ scenario, optimized = false }) {
+export default function ScenarioCard({
+  scenario,
+  optimized = false,
+  draggable = false,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  onDragEnd,
+  onPointerDown,
+  onPointerMove,
+  onPointerUp,
+  scenarioIndex,
+}) {
   return (
     <article
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      onDragEnd={onDragEnd}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      data-scenario-index={scenarioIndex}
       className={`flex min-h-[268px] flex-1 flex-col rounded-2xl border bg-white p-5 sm:p-6 ${
         optimized ? "border-gold-dark" : "border-green-lightest"
-      }`}
+      } ${draggable ? "touch-none cursor-grab transition hover:-translate-y-1 hover:shadow-lg active:cursor-grabbing active:scale-[.99]" : ""}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div>

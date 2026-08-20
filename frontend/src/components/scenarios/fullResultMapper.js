@@ -9,7 +9,10 @@ const coolingLabels = {
 const formatLoss = (min, max) =>
   `$${formatAmount(min)}–${formatAmount(max)}`;
 
-export const mapCalculationToScenario = (calculation) => {
+export const mapCalculationToScenario = (
+  calculation,
+  { name = "Actual", badge = "BASE" } = {},
+) => {
   const strandedPercent = Math.round(
     calculation.stranded_capacity_percent * 100,
   );
@@ -18,9 +21,10 @@ export const mapCalculationToScenario = (calculation) => {
     .join(" + ");
 
   return {
-    name: "Actual",
+    id: calculation.id,
+    name,
     details: `${calculation.facility_size_mw} MW · ${calculation.utilization_percentage}% util · ${cooling}`,
-    badge: "BASE",
+    badge,
     stranded: `${strandedPercent}%`,
     strandedMw: `${calculation.stranded_capacity_mw} MW`,
     loss: formatLoss(calculation.annual_loss_min, calculation.annual_loss_max),

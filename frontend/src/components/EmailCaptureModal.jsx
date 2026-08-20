@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { screenSize } from "./hooks/screenSize";
 import Loader from "./reusableComponents/Loader";
 import { registerLead } from "../services/calculatorService";
+import { LEAD_EMAIL_STORAGE_KEY } from "../constants/storage";
 
 export default function EmailCaptureModal({ onClose, calculationId }) {
   const { isMobile } = screenSize();
@@ -33,6 +34,7 @@ export default function EmailCaptureModal({ onClose, calculationId }) {
 
     try {
       await registerLead(normalizedEmail, calculationId);
+      sessionStorage.setItem(LEAD_EMAIL_STORAGE_KEY, normalizedEmail);
       navigate(`/full-result/${calculationId}`, {
         state: { showUnlockSuccess: true },
       });
